@@ -409,8 +409,8 @@ function saveToSheets() {
 function load() {
   WD = getWD();
   try { var el = localStorage.getItem('hr_emplist'); EMP = el ? JSON.parse(el) : DEFAULT_EMP.slice(); } catch(e) { EMP = DEFAULT_EMP.slice(); }
-  try { var s = localStorage.getItem('hr_special'); if (s) specialData = JSON.parse(s); } catch(e) {}
   try { var v = localStorage.getItem('hr_vac'); if (v) vacData = JSON.parse(v); } catch(e) {}
+  // specialData נטען רק מ-Sheets, לא מ-localStorage
   try {
     var k = localStorage.getItem('hr_apikey');
     if (k) {
@@ -442,7 +442,10 @@ function load() {
           }
         }
       }
-      if (result.special) specialData = result.special;
+      if (result.special) {
+        specialData = result.special;
+        try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
+      }
       render(); setSt('מוכן', '');
     })
     .catch(function() { render(); setSt('מוכן', ''); });
