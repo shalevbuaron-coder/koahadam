@@ -10,7 +10,7 @@
 :root{
   --bg:#0c0c10;--surface:#15151c;--surface2:#1e1e28;--border:#28283a;
   --text:#eeedf8;--muted:#6e6d85;--accent:#6c5ce7;--accent2:#a29bfe;
-  --green:#00b894;--blue:#74b9ff;--yellow:#fdcb6e;--red:#ff7675;
+  --green:#00b894;--blue:#74b9ff;--yellow:#fdcb6e;--red:#ff7675;--pink:#fd79a8;
 }
 body{font-family:"Rubik",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem;}
 .app{max-width:820px;margin:0 auto;}
@@ -43,8 +43,9 @@ body{font-family:"Rubik",sans-serif;background:var(--bg);color:var(--text);min-h
 .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
 .card-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);}
 .card-head span{font-size:14px;font-weight:500;}
-.btn-copy{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--muted);font-family:"Rubik",sans-serif;font-size:12px;cursor:pointer;}
-.btn-copy:hover{color:var(--text);}
+.head-btns{display:flex;gap:8px;}
+.btn-sm{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--muted);font-family:"Rubik",sans-serif;font-size:12px;cursor:pointer;}
+.btn-sm:hover{color:var(--text);}
 .scroll{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
 th{padding:9px 10px;background:var(--surface2);color:var(--muted);font-weight:400;white-space:nowrap;text-align:center;border-bottom:1px solid var(--border);}
@@ -58,19 +59,23 @@ tr:hover td{background:#ffffff06;}
 .bc{background:#00b89418;color:var(--green);}
 .bg{background:#fdcb6e18;color:var(--yellow);}
 .bn{background:#ff767518;color:var(--red);}
-.ba2{background:#fd79a818;color:#fd79a8;}
-.bm{background:#a29bfe18;color:var(--accent2);cursor:pointer;text-decoration:underline dotted;}
+.ba{background:#fd79a818;color:var(--pink);}
+.bm{background:#a29bfe18;color:var(--accent2);cursor:pointer;}
+.bm:hover{background:#a29bfe33;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;}
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;justify-content:center;align-items:center;}
-.modal-overlay.open{display:flex;}
+.legend{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);}
+/* Modal */
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:360px;direction:rtl;}
-.modal h3{font-size:15px;font-weight:500;margin-bottom:12px;}
+.modal h3{font-size:14px;font-weight:500;margin-bottom:12px;color:var(--muted);}
 .modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;resize:none;margin-bottom:12px;}
-.modal-btns{display:flex;gap:8px;justify-content:flex-end;}
-.modal-btns button{border:none;border-radius:8px;padding:8px 16px;font-family:"Rubik",sans-serif;font-size:13px;cursor:pointer;}
-.modal-save{background:var(--accent);color:#fff;}
-.modal-cancel{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
-.legend{display:flex;gap:12px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);}
+.modal textarea:focus{border-color:var(--accent);}
+.modal-btns{display:flex;gap:8px;justify-content:flex-start;}
+.mbtn{border:none;border-radius:8px;padding:8px 16px;font-family:"Rubik",sans-serif;font-size:13px;cursor:pointer;}
+.mbtn-s{background:var(--accent);color:#fff;}
+.mbtn-c{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
+.mbtn-d{background:#ff767518;color:var(--red);border:1px solid #ff767533;}
 </style>
 </head>
 <body>
@@ -104,9 +109,9 @@ tr:hover td{background:#ffffff06;}
   <div class="card">
     <div class="card-head">
       <span>שבועיים קדימה</span>
-      <div style="display:flex;gap:8px;">
-        <button class="btn-copy" onclick="copyReport()">דוח 1</button>
-        <button class="btn-copy" onclick="copyExcel()">העתק ל-Excel</button>
+      <div class="head-btns">
+        <button class="btn-sm" onclick="copyReport()">דוח 1</button>
+        <button class="btn-sm" onclick="copyExcel()">העתק ל-Excel</button>
       </div>
     </div>
     <div class="scroll"><table id="tbl"></table></div>
@@ -115,56 +120,35 @@ tr:hover td{background:#ffffff06;}
       <span class="badge bc">חופש</span>
       <span class="badge bg">גימל</span>
       <span class="badge bn">לא מגיע</span>
-      <span class="badge ba2">אפטר</span>
-      <span class="badge bm">מיוחד</span>
+      <span class="badge ba">אפטר</span>
+      <span class="badge bm">מיוחד ✎</span>
     </div>
   </div>
+</div>
 
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
-      <textarea id="modalText" rows="3" placeholder="תאר את האירוע המיוחד..."></textarea>
-      <div class="modal-btns">
-        <button class="modal-cancel" onclick="closeModal()">ביטול</button>
-        <button class="modal-save" onclick="saveModal()">שמור</button>
-      </div>
+<!-- Modal -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
+    <textarea id="modalText" rows="3" placeholder="תאר את האירוע..."></textarea>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-s" onclick="saveModal()">שמור</button>
+      <button class="mbtn mbtn-d" onclick="deleteSpecial()">מחק</button>
+      <button class="mbtn mbtn-c" onclick="closeModal()">ביטול</button>
     </div>
   </div>
 </div>
 
 <script>
+var SHEETS_URL = "https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec";
+var PROXY_URL = "https://hr-proxy.shalevbuaron.workers.dev";
 var EMP = ["איתן ליבשין","איתן רוזנטל","אורי דויטש","בר ורוטנקר","מור ריבק","רוני קוטליארנקו","שחר שטייר","גיא אליאס","אדר ביטון","איתי בנס"];
 var DN = {0:"ראשון",1:"שני",2:"שלישי",3:"רביעי",4:"חמישי"};
-var WD = getWD();
+var WD = [];
 var tableData = {};
 var specialData = {};
-var modalEmp = null;
-var modalDate = null;
-
-function openModal(emp, date) {
-  modalEmp = emp;
-  modalDate = date;
-  var existing = (specialData[emp] && specialData[emp][date]) || "";
-  document.getElementById("modalTitle").textContent = emp + " — " + date;
-  document.getElementById("modalText").value = existing;
-  document.getElementById("modalOverlay").classList.add("open");
-  setTimeout(function(){ document.getElementById("modalText").focus(); }, 100);
-}
-
-function closeModal() {
-  document.getElementById("modalOverlay").classList.remove("open");
-  modalEmp = null; modalDate = null;
-}
-
-function saveModal() {
-  if (!modalEmp || !modalDate) return;
-  var text = document.getElementById("modalText").value.trim();
-  if (!specialData[modalEmp]) specialData[modalEmp] = {};
-  specialData[modalEmp][modalDate] = text;
-  try { localStorage.setItem("hr_special", JSON.stringify(specialData)); } catch(e) {}
-  render();
-  closeModal();
-}
+var chatHistory = [];
+var modalEmp = null, modalDate = null;
 
 function getWD() {
   var days = [], d = new Date();
@@ -181,27 +165,21 @@ function fmt(d) {
   return String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0");
 }
 
-var SHEETS_URL = "https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec";
-
 function load() {
+  WD = getWD();
   try { var s = localStorage.getItem("hr_special"); if (s) specialData = JSON.parse(s); } catch(e) {}
   try {
     var k = localStorage.getItem("hr_apikey");
     if (k) {
       document.getElementById("apiKey").value = k;
-      var el = document.getElementById("apiStatus");
-      el.textContent = "מפתח שמור";
-      el.className = "api-status ok";
+      document.getElementById("apiStatus").textContent = "מפתח שמור";
+      document.getElementById("apiStatus").className = "api-status ok";
     }
   } catch(e) {}
   setSt("טוען נתונים מהענן...", "loading");
   fetch(SHEETS_URL)
-    .then(function(r){
-      console.log("Sheets response status:", r.status);
-      return r.json();
-    })
-    .then(function(result){
-      console.log("Sheets data:", JSON.stringify(result).slice(0,200));
+    .then(function(r) { return r.json(); })
+    .then(function(result) {
       tableData = {};
       var rows = result.data || [];
       if (rows.length > 1) {
@@ -213,90 +191,75 @@ function load() {
           for (var j = 1; j < headers.length; j++) {
             var hdr = headers[j];
             if (!hdr) continue;
-            // Convert ISO date format back to DD/MM
             if (typeof hdr === "string" && hdr.match(/^\d{4}-\d{2}-\d{2}/)) {
-              var d = new Date(hdr);
-              hdr = String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0");
-            } else if (hdr instanceof Date) {
-              hdr = String(hdr.getDate()).padStart(2,"0") + "/" + String(hdr.getMonth()+1).padStart(2,"0");
+              var dd = new Date(hdr);
+              hdr = String(dd.getDate()).padStart(2,"0") + "/" + String(dd.getMonth()+1).padStart(2,"0");
             }
-            if (rows[i][j]) {
-              tableData[empName][hdr] = rows[i][j];
-            }
+            if (rows[i][j]) tableData[empName][hdr] = rows[i][j];
           }
         }
       }
       render();
       setSt("מוכן", "");
     })
-    .catch(function(){
-      render();
-      setSt("מוכן (לא נטען מהענן)", "");
-    });
+    .catch(function() { render(); setSt("מוכן (שגיאה בטעינה מהענן)", "err"); });
 }
 
-function saveData() {
-  // Save to localStorage as backup
-  try { localStorage.setItem("hr_v6", JSON.stringify(tableData)); } catch(e) {}
-  // Build rows for Sheets: header row + one row per employee
-  var headers = ["שם"].concat(WD.map(function(d){ return fmt(d); }));
+function saveToSheets() {
+  var headers = ["שם"].concat(WD.map(function(d) { return fmt(d); }));
   var rows = [headers];
   EMP.forEach(function(e) {
     var row = [e];
-    WD.forEach(function(d) {
-      row.push((tableData[e] && tableData[e][fmt(d)]) || "");
-    });
+    WD.forEach(function(d) { row.push((tableData[e] && tableData[e][fmt(d)]) || ""); });
     rows.push(row);
   });
-  fetch(SHEETS_URL, {
-    method: "POST",
-    body: JSON.stringify({data: rows})
-  }).catch(function(){});
+  fetch(SHEETS_URL, { method: "POST", body: JSON.stringify({data: rows}) }).catch(function(){});
+  try { localStorage.setItem("hr_v6", JSON.stringify(tableData)); } catch(ex) {}
 }
 
 function saveKey() {
   var k = document.getElementById("apiKey").value.trim();
   if (!k) { setSt("אנא הכנס מפתח API","err"); return; }
   localStorage.setItem("hr_apikey", k);
-  var el = document.getElementById("apiStatus");
-  el.textContent = "מפתח שמור";
-  el.className = "api-status ok";
-  setSt("מפתח נשמר בהצלחה","ok");
+  document.getElementById("apiStatus").textContent = "מפתח שמור";
+  document.getElementById("apiStatus").className = "api-status ok";
+  setSt("מפתח נשמר","ok");
 }
 
 function setSt(msg, cls) {
   var el = document.getElementById("status");
   el.className = "status" + (cls ? " " + cls : "");
-  if (cls === "loading") {
-    el.innerHTML = "<div class='spinner'></div><span>" + msg + "</span>";
-  } else {
-    el.textContent = msg;
+  el.innerHTML = cls === "loading" ? "<div class='spinner'></div><span>" + msg + "</span>" : msg;
+}
+
+function getBadge(v, e, d) {
+  var dateKey = fmt(d);
+  if (v === "הפנייה" || v === "רופא") return "<span class='badge bh'>הפנייה</span>";
+  if (v === "חופש") return "<span class='badge bc'>חופש</span>";
+  if (v === "גימל" || v === "ג'") return "<span class='badge bg'>גימל</span>";
+  if (v === "לא מגיע") return "<span class='badge bn'>לא מגיע</span>";
+  if (v === "אפטר") return "<span class='badge ba'>אפטר</span>";
+  if (v === "מיוחד") {
+    var note = (specialData[e] && specialData[e][dateKey]) || "";
+    var label = note ? note.slice(0,8) + (note.length > 8 ? ".." : "") : "מיוחד";
+    return "<span class='badge bm' onclick='openModal("" + e.replace(/"/g,"&quot;") + "","" + dateKey + "")'>" + label + " ✎</span>";
   }
+  if (v) return "<span class='badge bn'>" + v + "</span>";
+  return "<span class='dot' onclick='openModal("" + e.replace(/"/g,"&quot;") + "","" + dateKey + "")'></span>";
 }
 
 function render() {
   var h = "<thead><tr><th class='nc'>שם החייל</th>";
   for (var i = 0; i < WD.length; i++) {
-    var d = WD[i];
-    h += "<th>" + DN[d.getDay()] + "<br><span style='font-size:10px;opacity:.5'>" + fmt(d) + "</span></th>";
+    h += "<th>" + DN[WD[i].getDay()] + "<br><span style='font-size:10px;opacity:.5'>" + fmt(WD[i]) + "</span></th>";
   }
   h += "</tr></thead><tbody>";
   for (var ei = 0; ei < EMP.length; ei++) {
     var e = EMP[ei];
     h += "<tr><td class='nm'>" + e + "</td>";
     for (var di = 0; di < WD.length; di++) {
-      var d = WD[di];
-      var v = (tableData[e] && tableData[e][fmt(d)]) || "";
-      var b = "";
-      var special = specialData[e] && specialData[e][fmt(d)];
-      if (v === "הפנייה" || v === "רופא") b = "<span class=\'badge bh\'>הפנייה</span>";
-      else if (v === "חופש") b = "<span class=\'badge bc\'>חופש</span>";
-      else if (v === "גימל" || v === "ג\'") b = "<span class=\'badge bg\'>גימל</span>";
-      else if (v === "אפטר") b = "<span class=\'badge ba2\'>אפטר</span>";
-      else if (v === "מיוחד") b = "<span class=\'badge bm\' onclick=\'openModal("" + e + "","" + fmt(d) + "")\'>" + (special ? special.slice(0,6) + (special.length>6?"..":"") : "מיוחד") + "</span>";
-      else if (v) b = "<span class=\'badge bn\'>" + v + "</span>";
-      else b = "<span class=\'dot\'></span>";
-      h += "<td>" + b + "</td>";
+      var v = (tableData[e] && tableData[e][fmt(WD[di])]) || "";
+      h += "<td>" + getBadge(v, e, WD[di]) + "</td>";
     }
     h += "</tr>";
   }
@@ -304,14 +267,46 @@ function render() {
   document.getElementById("tbl").innerHTML = h;
 }
 
-var chatHistory = [];
-var systemPrompt = "";
+// Modal
+function openModal(emp, date) {
+  modalEmp = emp; modalDate = date;
+  document.getElementById("modalTitle").textContent = emp + " — " + date;
+  document.getElementById("modalText").value = (specialData[emp] && specialData[emp][date]) || "";
+  document.getElementById("overlay").classList.add("open");
+  setTimeout(function() { document.getElementById("modalText").focus(); }, 100);
+}
+
+function closeModal() {
+  document.getElementById("overlay").classList.remove("open");
+  modalEmp = null; modalDate = null;
+}
+
+function saveModal() {
+  if (!modalEmp || !modalDate) return;
+  var text = document.getElementById("modalText").value.trim();
+  if (!specialData[modalEmp]) specialData[modalEmp] = {};
+  specialData[modalEmp][modalDate] = text;
+  if (!tableData[modalEmp]) tableData[modalEmp] = {};
+  tableData[modalEmp][modalDate] = "מיוחד";
+  try { localStorage.setItem("hr_special", JSON.stringify(specialData)); } catch(ex) {}
+  saveToSheets();
+  render();
+  closeModal();
+}
+
+function deleteSpecial() {
+  if (!modalEmp || !modalDate) return;
+  if (specialData[modalEmp]) delete specialData[modalEmp][modalDate];
+  if (tableData[modalEmp]) tableData[modalEmp][modalDate] = "";
+  try { localStorage.setItem("hr_special", JSON.stringify(specialData)); } catch(ex) {}
+  saveToSheets();
+  render();
+  closeModal();
+}
 
 function getSystemPrompt() {
-  var dates = WD.map(function(d){ return DN[d.getDay()] + " " + fmt(d); }).join(", ");
+  var dates = WD.map(function(d) { return DN[d.getDay()] + " " + fmt(d); }).join(", ");
   var today = fmt(new Date());
-
-  // Build current state string so model knows what's in the table
   var stateLines = [];
   EMP.forEach(function(e) {
     var entries = [];
@@ -321,99 +316,82 @@ function getSystemPrompt() {
     });
     if (entries.length) stateLines.push(e + ": " + entries.join(", "));
   });
-  var currentState = stateLines.length ? stateLines.join("\n") : "אין היעדרויות רשומות";
+  var state = stateLines.length ? stateLines.join("
+") : "אין היעדרויות";
+  return "אתה עוזר HR לניהול נוכחות חיילים. ענה תמיד בעברית.
+" +
+    "עובדים: " + EMP.join(", ") + "
+" +
+    "ימי עבודה (ראשון-חמישי): " + dates + "
+" +
+    "היום: " + today + "
 
-  return "אתה עוזר HR לניהול נוכחות חיילים. ענה תמיד בעברית.\n" +
-    "עובדים: " + EMP.join(", ") + "\n" +
-    "ימי עבודה בטבלה (ראשון-חמישי בלבד): " + dates + "\n" +
-    "היום: " + today + "\n\n" +
-    "מצב נוכחי של הטבלה:\n" + currentState + "\n\n" +
-    "חוקים:\n" +
-    "1. ימי מחלה נספרים כימים קלנדריים רצופים (כולל שישי ושבת). שישי ושבת לא מופיעים בטבלה אך נספרים.\n" +
-    "   דוגמה: שבוע מראשון 07/06 = 07-13/06, בטבלה: 07,08,09,10,11/06 בלבד.\n" +
-    "   דוגמה: 4 ימים מחמישי 05/06 = 05-08/06, בטבלה: 05/06 ו-08/06 בלבד.\n" +
-    "2. אם לא צוין יום התחלה, התחל מהיום הבא.\n" +
-    "3. מחלה/גימל = גימל, רופא/הפנייה = הפנייה\n" +
-    "4. כשמבקשים לבטל 'את כל ההיעדרויות' או 'את כל החופשים' וכו' של עובד — השתמש ב-action:remove_all (ללא תאריך).\n" +
-    "   זה יסיר את כל הרשומות של אותו עובד מהטבלה.\n" +
-    "5. כשמבקשים לבטל היעדרות לתקופה (לדוגמה 'ביטל את החופש לשבוע הקרוב') — \n" +
-    "   בדוק במצב הנוכחי של הטבלה מה רשום לאותו עובד בשבוע הקרוב וצור remove לכל יום רלוונטי.\n" +
-    "6. ביטול יום ספציפי = action:remove עם תאריך\n" +
-    "7. הוספה = action:add\n\n" +
-    "חשוב מאוד: ענה אך ורק ב-JSON תקני, ללא טקסט לפני או אחרי, ללא הסברים.\n" +
-    "כשאתה מבין את הבקשה:\n" +
-    '{"changes":[{"employee":"שם מדויק","date":"DD/MM או ריק אם remove_all","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור קצר","needs_clarification":false}\n' +
-    "כשאתה צריך הבהרה:\n" +
-    '{"changes":[],"summary":"","needs_clarification":true,"question":"שאלה קצרה בעברית"}';
+" +
+    "מצב נוכחי:
+" + state + "
+
+" +
+    "חוקים:
+" +
+    "1. ימי מחלה נספרים כימים קלנדריים רצופים כולל שישי ושבת. שישי/שבת לא מופיעים בטבלה.
+" +
+    "   דוגמה: שבוע מראשון 07/06 = 07-13/06, בטבלה: 07,08,09,10,11/06.
+" +
+    "2. אם לא צוין יום התחלה, התחל מהיום הבא.
+" +
+    "3. סוגי היעדרות: הפנייה, חופש, גימל, לא מגיע, אפטר, מיוחד
+" +
+    "4. אפטר = העובד יוצא באותו יום וחוזר למחרת.
+" +
+    "5. מיוחד = אירוע מיוחד (כנס וכו'). הפרטים יוזנו ידנית בלחיצה על התא.
+" +
+    "6. ביטול כללי (כל ההיעדרויות) = action:remove_all
+" +
+    "7. ביטול ספציפי = action:remove עם תאריך
+" +
+    "8. הוספה = action:add
+
+" +
+    "חשוב מאוד: ענה אך ורק ב-JSON תקני ללא טקסט נוסף.
+" +
+    'כשמבין: {"changes":[{"employee":"שם","date":"DD/MM","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור","needs_clarification":false}
+' +
+    'כשצריך הבהרה: {"changes":[],"summary":"","needs_clarification":true,"question":"שאלה"}';
 }
 
 function sendMsg() {
   var msg = document.getElementById("msg").value.trim();
   if (!msg) { setSt("אנא כתוב הודעה","err"); return; }
   var key = localStorage.getItem("hr_apikey") || "";
-  if (!key) { setSt("אנא הכנס מפתח API למעלה ולחץ שמור","err"); return; }
-
+  if (!key) { setSt("אנא הכנס מפתח API","err"); return; }
   document.getElementById("sendBtn").disabled = true;
   setSt("מנתח הודעה...","loading");
-
   chatHistory.push({role:"user", content: msg});
-
-  fetch("https://hr-proxy.shalevbuaron.workers.dev", {
+  fetch(PROXY_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": key,
-      "anthropic-version": "2023-06-01"
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
-      system: getSystemPrompt(),
-      messages: chatHistory
-    })
+    headers: {"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},
+    body: JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:getSystemPrompt(),messages:chatHistory})
   })
-  .then(function(resp) {
-    if (!resp.ok) {
-      return resp.json().then(function(e) {
-        throw new Error((e && e.error && e.error.message) || "שגיאת שרת " + resp.status);
-      });
-    }
-    return resp.json();
+  .then(function(r) {
+    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||"שגיאת שרת "+r.status); });
+    return r.json();
   })
   .then(function(result) {
-    if (!result || !result.content) {
-      var errMsg = (result && result.error && result.error.message) || JSON.stringify(result);
-      throw new Error(errMsg);
-    }
-    var text = result.content.filter(function(b){ return b.type === "text"; }).map(function(b){ return b.text; }).join("");
+    if (!result || !result.content) throw new Error((result&&result.error&&result.error.message)||"תשובה ריקה");
+    var text = result.content.filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
     chatHistory.push({role:"assistant", content: text});
-
-    // Try to extract JSON
     var parsed;
     try {
-      // Try direct parse first
-      var clean = text.trim();
-      if (clean.startsWith("```")) {
-        clean = clean.replace(/```json\n?/g,"").replace(/```/g,"").trim();
-      }
+      var clean = text.trim().replace(/^```json
+?/,"").replace(/```$/,"").trim();
       parsed = JSON.parse(clean);
     } catch(e1) {
       try {
-        // Try finding outermost { }
-        var start = text.indexOf("{");
-        var end = text.lastIndexOf("}");
-        if (start === -1 || end === -1) throw new Error("no json");
-        parsed = JSON.parse(text.slice(start, end+1));
-      } catch(e2) {
-        // Show raw response for debugging
-        console.error("Raw response:", text);
-        alert("תשובת המודל:\n" + text.slice(0,300));
-        throw new Error("Invalid response format");
-      }
+        var s = text.indexOf("{"), en = text.lastIndexOf("}");
+        parsed = JSON.parse(text.slice(s, en+1));
+      } catch(e2) { throw new Error("תשובה לא תקינה"); }
     }
-
     if (parsed.needs_clarification) {
-      // שאלת הבהרה — ממתין לתגובה
       setSt("? " + parsed.question, "");
       document.getElementById("msg").value = "";
     } else {
@@ -422,15 +400,14 @@ function sendMsg() {
         changes.forEach(function(a) {
           var emp = null;
           for (var i = 0; i < EMP.length; i++) {
-            if (EMP[i] === a.employee || EMP[i].includes(a.employee) || a.employee.includes(EMP[i].split(" ")[0])) {
+            if (EMP[i]===a.employee || EMP[i].includes(a.employee) || a.employee.includes(EMP[i].split(" ")[0])) {
               emp = EMP[i]; break;
             }
           }
           if (emp) {
             if (!tableData[emp]) tableData[emp] = {};
             if (a.action === "remove_all") {
-              // מחיקת כל ההיעדרויות של העובד
-              WD.forEach(function(d) { tableData[emp][fmt(d)] = ""; });
+              WD.forEach(function(d){ tableData[emp][fmt(d)] = ""; });
             } else if (a.action === "remove" && a.date) {
               tableData[emp][a.date] = "";
             } else if (a.action === "add" && a.date) {
@@ -438,9 +415,9 @@ function sendMsg() {
             }
           }
         });
-        saveData(); render();
+        saveToSheets(); render();
         setSt("✓ " + parsed.summary, "ok");
-        chatHistory = []; // איפוס שיחה אחרי עדכון מוצלח
+        chatHistory = [];
       } else {
         setSt("⚠ " + (parsed.summary || "לא הבנתי"), "err");
         chatHistory = [];
@@ -448,48 +425,50 @@ function sendMsg() {
       document.getElementById("msg").value = "";
     }
   })
-  .catch(function(e) {
-    setSt("שגיאה: " + e.message, "err");
-    chatHistory = [];
-  })
-  .finally(function() {
-    document.getElementById("sendBtn").disabled = false;
-  });
+  .catch(function(e) { setSt("שגיאה: " + e.message, "err"); chatHistory = []; })
+  .finally(function() { document.getElementById("sendBtn").disabled = false; });
 }
 
 function copyReport() {
   var tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) {
-    tomorrow.setDate(tomorrow.getDate() + 1);
-  }
+  while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 1);
   var dateKey = fmt(tomorrow);
   var dayName = DN[tomorrow.getDay()];
-  var lines = "דוח נוכחות - יום " + dayName + " " + dateKey + "\n";
-  lines += "---\n";
+  var lines = "דוח נוכחות - יום " + dayName + " " + dateKey + "
+---
+";
   EMP.forEach(function(e) {
     var v = (tableData[e] && tableData[e][dateKey]) || "";
-    var location = "בסיס";
-    if (v === "גימל") location = "גימלים";
-    else if (v === "הפנייה") location = "הפנייה";
-    else if (v === "חופש") location = "חופשה שנתית";
-    else if (v === "לא מגיע") location = "לא מגיע";
-    lines += e + " - " + location + "\n";
+    var loc = "בסיס";
+    if (v==="גימל") loc="גימלים";
+    else if (v==="הפנייה") loc="הפנייה";
+    else if (v==="חופש") loc="חופשה שנתית";
+    else if (v==="לא מגיע") loc="לא מגיע";
+    else if (v==="אפטר") loc="אפטר";
+    else if (v==="מיוחד") {
+      var note = (specialData[e] && specialData[e][dateKey]) || "אירוע מיוחד";
+      loc = note;
+    }
+    lines += e + " - " + loc + "
+";
   });
   navigator.clipboard.writeText(lines).then(function() {
-    var b = document.querySelector(".btn-copy");
+    var b = document.querySelectorAll(".btn-sm")[0];
     var o = b.textContent; b.textContent = "הועתק!";
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
 
 function copyExcel() {
-  var t = "שם החייל\t" + WD.map(function(d){ return DN[d.getDay()] + " " + fmt(d); }).join("\t") + "\n";
+  var t = "שם החייל	" + WD.map(function(d){ return DN[d.getDay()]+" "+fmt(d); }).join("	") + "
+";
   EMP.forEach(function(e) {
-    t += e + "\t" + WD.map(function(d){ return (tableData[e] && tableData[e][fmt(d)]) || ""; }).join("\t") + "\n";
+    t += e + "	" + WD.map(function(d){ return (tableData[e]&&tableData[e][fmt(d)])||""; }).join("	") + "
+";
   });
   navigator.clipboard.writeText(t).then(function() {
-    var b = document.querySelector(".btn-copy");
+    var b = document.querySelectorAll(".btn-sm")[1];
     var o = b.textContent; b.textContent = "הועתק!";
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
