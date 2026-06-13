@@ -7,15 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --bg:#0c0c10;--surface:#15151c;--surface2:#1e1e28;--border:#28283a;
-  --text:#eeedf8;--muted:#6e6d85;--accent:#6c5ce7;--accent2:#a29bfe;
-  --green:#00b894;--blue:#74b9ff;--yellow:#fdcb6e;--red:#ff7675;--pink:#fd79a8;
-}
+:root{--bg:#0c0c10;--surface:#15151c;--surface2:#1e1e28;--border:#28283a;--text:#eeedf8;--muted:#6e6d85;--accent:#6c5ce7;--accent2:#a29bfe;--green:#00b894;--blue:#74b9ff;--yellow:#fdcb6e;--red:#ff7675;--pink:#fd79a8;}
 body{font-family:"Rubik",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem;}
 .app{max-width:820px;margin:0 auto;}
 .header{text-align:center;margin-bottom:2rem;}
-.header h1{font-size:1.6rem;font-weight:600;letter-spacing:-0.5px;}
+.header h1{font-size:1.6rem;font-weight:600;}
 .header p{font-size:13px;color:var(--muted);margin-top:6px;}
 .setup-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:1.5rem;}
 .setup-box label{font-size:12px;color:var(--muted);display:block;margin-bottom:8px;}
@@ -62,16 +58,15 @@ tr:hover td{background:#ffffff06;}
 .ba{background:#fd79a818;color:var(--pink);}
 .bm{background:#a29bfe18;color:var(--accent2);cursor:pointer;}
 .bm:hover{background:#a29bfe33;}
-.dot{width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);}
-/* Modal */
 .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;align-items:center;justify-content:center;}
 .overlay.open{display:flex;}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:360px;direction:rtl;}
 .modal h3{font-size:14px;font-weight:500;margin-bottom:12px;color:var(--muted);}
 .modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;resize:none;margin-bottom:12px;}
 .modal textarea:focus{border-color:var(--accent);}
-.modal-btns{display:flex;gap:8px;justify-content:flex-start;}
+.modal-btns{display:flex;gap:8px;}
 .mbtn{border:none;border-radius:8px;padding:8px 16px;font-family:"Rubik",sans-serif;font-size:13px;cursor:pointer;}
 .mbtn-s{background:var(--accent);color:#fff;}
 .mbtn-c{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
@@ -84,18 +79,14 @@ tr:hover td{background:#ffffff06;}
     <h1>ניהול נוכחות</h1>
     <p>כתוב הודעה — המערכת תעדכן את הטבלה אוטומטית</p>
   </div>
-
   <div class="setup-box">
     <label>מפתח Anthropic API (נשמר על המחשב שלך בלבד)</label>
     <div class="setup-row">
       <input type="password" id="apiKey" placeholder="sk-ant-..." />
       <button class="btn-save" onclick="saveKey()">שמור</button>
     </div>
-    <div class="api-status" id="apiStatus">
-      לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a>
-    </div>
+    <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a></div>
   </div>
-
   <div class="input-area">
     <label>הודעה חדשה</label>
     <div class="input-row">
@@ -103,9 +94,7 @@ tr:hover td{background:#ffffff06;}
       <button class="btn-send" id="sendBtn" onclick="sendMsg()">שלח</button>
     </div>
   </div>
-
   <div class="status" id="status">מוכן</div>
-
   <div class="card">
     <div class="card-head">
       <span>שבועיים קדימה</span>
@@ -125,8 +114,6 @@ tr:hover td{background:#ffffff06;}
     </div>
   </div>
 </div>
-
-<!-- Modal -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
@@ -138,12 +125,11 @@ tr:hover td{background:#ffffff06;}
     </div>
   </div>
 </div>
-
 <script>
-var SHEETS_URL = "https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec";
-var PROXY_URL = "https://hr-proxy.shalevbuaron.workers.dev";
-var EMP = ["איתן ליבשין","איתן רוזנטל","אורי דויטש","בר ורוטנקר","מור ריבק","רוני קוטליארנקו","שחר שטייר","גיא אליאס","אדר ביטון","איתי בנס"];
-var DN = {0:"ראשון",1:"שני",2:"שלישי",3:"רביעי",4:"חמישי"};
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec';
+var PROXY_URL = 'https://hr-proxy.shalevbuaron.workers.dev';
+var EMP = ["איתן ליבשין", "איתן רוזנטל", "אורי דויטש", "בר ורוטנקר", "מור ריבק", "רוני קוטליארנקו", "שחר שטייר", "גיא אליאס", "אדר ביטון", "איתי בנס"];
+var DN = {0:'ראשון',1:'שני',2:'שלישי',3:'רביעי',4:'חמישי'};
 var WD = [];
 var tableData = {};
 var specialData = {};
@@ -162,21 +148,123 @@ function getWD() {
 }
 
 function fmt(d) {
-  return String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0");
+  return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function setSt(msg, cls) {
+  var el = document.getElementById('status');
+  el.className = 'status' + (cls ? ' ' + cls : '');
+  el.innerHTML = cls === 'loading' ? '<div class="spinner"></div><span>' + msg + '</span>' : msg;
+}
+
+function saveKey() {
+  var k = document.getElementById('apiKey').value.trim();
+  if (!k) { setSt('אנא הכנס מפתח API','err'); return; }
+  localStorage.setItem('hr_apikey', k);
+  document.getElementById('apiStatus').textContent = 'מפתח שמור';
+  document.getElementById('apiStatus').className = 'api-status ok';
+  setSt('מפתח נשמר','ok');
+}
+
+function getBadge(v, e, dateKey) {
+  var empEnc = encodeURIComponent(e);
+  var dateEnc = encodeURIComponent(dateKey);
+  if (v === 'הפנייה' || v === 'רופא') return '<span class="badge bh">הפנייה</span>';
+  if (v === 'חופש') return '<span class="badge bc">חופש</span>';
+  if (v === 'גימל') return '<span class="badge bg">גימל</span>';
+  if (v === 'לא מגיע') return '<span class="badge bn">לא מגיע</span>';
+  if (v === 'אפטר') return '<span class="badge ba">אפטר</span>';
+  if (v === 'מיוחד') {
+    var note = (specialData[e] && specialData[e][dateKey]) || '';
+    var label = note ? (note.length > 8 ? note.slice(0,8) + '..' : note) : 'מיוחד';
+    return '<span class="badge bm" data-emp="' + empEnc + '" data-date="' + dateEnc + '" onclick="handleBadgeClick(this)">' + label + ' \u270e</span>';
+  }
+  if (v) return '<span class="badge bn">' + v + '</span>';
+  return '<span class="dot" data-emp="' + empEnc + '" data-date="' + dateEnc + '" onclick="handleBadgeClick(this)"></span>';
+}
+
+function handleBadgeClick(el) {
+  var emp = decodeURIComponent(el.getAttribute('data-emp'));
+  var date = decodeURIComponent(el.getAttribute('data-date'));
+  openModal(emp, date);
+}
+
+function render() {
+  var h = '<thead><tr><th class="nc">שם החייל</th>';
+  for (var i = 0; i < WD.length; i++) {
+    h += '<th>' + DN[WD[i].getDay()] + '<br><span style="font-size:10px;opacity:.5">' + fmt(WD[i]) + '</span></th>';
+  }
+  h += '</tr></thead><tbody>';
+  for (var ei = 0; ei < EMP.length; ei++) {
+    var e = EMP[ei];
+    h += '<tr><td class="nm">' + e + '</td>';
+    for (var di = 0; di < WD.length; di++) {
+      var dateKey = fmt(WD[di]);
+      var v = (tableData[e] && tableData[e][dateKey]) || '';
+      h += '<td>' + getBadge(v, e, dateKey) + '</td>';
+    }
+    h += '</tr>';
+  }
+  h += '</tbody>';
+  document.getElementById('tbl').innerHTML = h;
+}
+
+function openModal(emp, date) {
+  modalEmp = emp; modalDate = date;
+  document.getElementById('modalTitle').textContent = emp + ' \u2014 ' + date;
+  document.getElementById('modalText').value = (specialData[emp] && specialData[emp][date]) || '';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(function() { document.getElementById('modalText').focus(); }, 100);
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  modalEmp = null; modalDate = null;
+}
+
+function saveModal() {
+  if (!modalEmp || !modalDate) return;
+  var text = document.getElementById('modalText').value.trim();
+  if (!specialData[modalEmp]) specialData[modalEmp] = {};
+  specialData[modalEmp][modalDate] = text;
+  if (!tableData[modalEmp]) tableData[modalEmp] = {};
+  tableData[modalEmp][modalDate] = 'מיוחד';
+  try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
+  saveToSheets(); render(); closeModal();
+}
+
+function deleteSpecial() {
+  if (!modalEmp || !modalDate) return;
+  if (specialData[modalEmp]) delete specialData[modalEmp][modalDate];
+  if (tableData[modalEmp]) tableData[modalEmp][modalDate] = '';
+  try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
+  saveToSheets(); render(); closeModal();
+}
+
+function saveToSheets() {
+  var headers = ['שם'].concat(WD.map(function(d) { return fmt(d); }));
+  var rows = [headers];
+  EMP.forEach(function(e) {
+    var row = [e];
+    WD.forEach(function(d) { row.push((tableData[e] && tableData[e][fmt(d)]) || ''); });
+    rows.push(row);
+  });
+  fetch(SHEETS_URL, { method: 'POST', body: JSON.stringify({data: rows}) }).catch(function(){});
+  try { localStorage.setItem('hr_v6', JSON.stringify(tableData)); } catch(ex) {}
 }
 
 function load() {
   WD = getWD();
-  try { var s = localStorage.getItem("hr_special"); if (s) specialData = JSON.parse(s); } catch(e) {}
+  try { var s = localStorage.getItem('hr_special'); if (s) specialData = JSON.parse(s); } catch(e) {}
   try {
-    var k = localStorage.getItem("hr_apikey");
+    var k = localStorage.getItem('hr_apikey');
     if (k) {
-      document.getElementById("apiKey").value = k;
-      document.getElementById("apiStatus").textContent = "מפתח שמור";
-      document.getElementById("apiStatus").className = "api-status ok";
+      document.getElementById('apiKey').value = k;
+      document.getElementById('apiStatus').textContent = 'מפתח שמור';
+      document.getElementById('apiStatus').className = 'api-status ok';
     }
   } catch(e) {}
-  setSt("טוען נתונים מהענן...", "loading");
+  setSt('טוען נתונים מהענן...', 'loading');
   fetch(SHEETS_URL)
     .then(function(r) { return r.json(); })
     .then(function(result) {
@@ -191,242 +279,123 @@ function load() {
           for (var j = 1; j < headers.length; j++) {
             var hdr = headers[j];
             if (!hdr) continue;
-            if (typeof hdr === "string" && hdr.match(/^\d{4}-\d{2}-\d{2}/)) {
+            if (typeof hdr === 'string' && /^\d{4}-\d{2}-\d{2}/.test(hdr)) {
               var dd = new Date(hdr);
-              hdr = String(dd.getDate()).padStart(2,"0") + "/" + String(dd.getMonth()+1).padStart(2,"0");
+              hdr = String(dd.getDate()).padStart(2,'0') + '/' + String(dd.getMonth()+1).padStart(2,'0');
             }
             if (rows[i][j]) tableData[empName][hdr] = rows[i][j];
           }
         }
       }
-      render();
-      setSt("מוכן", "");
+      render(); setSt('מוכן', '');
     })
-    .catch(function() { render(); setSt("מוכן (שגיאה בטעינה מהענן)", "err"); });
+    .catch(function() { render(); setSt('שגיאה בטעינה מהענן', 'err'); });
 }
 
-function saveToSheets() {
-  var headers = ["שם"].concat(WD.map(function(d) { return fmt(d); }));
-  var rows = [headers];
-  EMP.forEach(function(e) {
-    var row = [e];
-    WD.forEach(function(d) { row.push((tableData[e] && tableData[e][fmt(d)]) || ""); });
-    rows.push(row);
-  });
-  fetch(SHEETS_URL, { method: "POST", body: JSON.stringify({data: rows}) }).catch(function(){});
-  try { localStorage.setItem("hr_v6", JSON.stringify(tableData)); } catch(ex) {}
-}
-
-function saveKey() {
-  var k = document.getElementById("apiKey").value.trim();
-  if (!k) { setSt("אנא הכנס מפתח API","err"); return; }
-  localStorage.setItem("hr_apikey", k);
-  document.getElementById("apiStatus").textContent = "מפתח שמור";
-  document.getElementById("apiStatus").className = "api-status ok";
-  setSt("מפתח נשמר","ok");
-}
-
-function setSt(msg, cls) {
-  var el = document.getElementById("status");
-  el.className = "status" + (cls ? " " + cls : "");
-  el.innerHTML = cls === "loading" ? "<div class='spinner'></div><span>" + msg + "</span>" : msg;
-}
-
-function getBadge(v, e, d) {
-  var dateKey = fmt(d);
-  if (v === "הפנייה" || v === "רופא") return "<span class='badge bh'>הפנייה</span>";
-  if (v === "חופש") return "<span class='badge bc'>חופש</span>";
-  if (v === "גימל" || v === "ג'") return "<span class='badge bg'>גימל</span>";
-  if (v === "לא מגיע") return "<span class='badge bn'>לא מגיע</span>";
-  if (v === "אפטר") return "<span class='badge ba'>אפטר</span>";
-  if (v === "מיוחד") {
-    var note = (specialData[e] && specialData[e][dateKey]) || "";
-    var label = note ? note.slice(0,8) + (note.length > 8 ? ".." : "") : "מיוחד";
-    return "<span class='badge bm' onclick='openModal("" + e.replace(/"/g,"&quot;") + "","" + dateKey + "")'>" + label + " ✎</span>";
-  }
-  if (v) return "<span class='badge bn'>" + v + "</span>";
-  return "<span class='dot' onclick='openModal("" + e.replace(/"/g,"&quot;") + "","" + dateKey + "")'></span>";
-}
-
-function render() {
-  var h = "<thead><tr><th class='nc'>שם החייל</th>";
-  for (var i = 0; i < WD.length; i++) {
-    h += "<th>" + DN[WD[i].getDay()] + "<br><span style='font-size:10px;opacity:.5'>" + fmt(WD[i]) + "</span></th>";
-  }
-  h += "</tr></thead><tbody>";
-  for (var ei = 0; ei < EMP.length; ei++) {
-    var e = EMP[ei];
-    h += "<tr><td class='nm'>" + e + "</td>";
-    for (var di = 0; di < WD.length; di++) {
-      var v = (tableData[e] && tableData[e][fmt(WD[di])]) || "";
-      h += "<td>" + getBadge(v, e, WD[di]) + "</td>";
-    }
-    h += "</tr>";
-  }
-  h += "</tbody>";
-  document.getElementById("tbl").innerHTML = h;
-}
-
-// Modal
-function openModal(emp, date) {
-  modalEmp = emp; modalDate = date;
-  document.getElementById("modalTitle").textContent = emp + " — " + date;
-  document.getElementById("modalText").value = (specialData[emp] && specialData[emp][date]) || "";
-  document.getElementById("overlay").classList.add("open");
-  setTimeout(function() { document.getElementById("modalText").focus(); }, 100);
-}
-
-function closeModal() {
-  document.getElementById("overlay").classList.remove("open");
-  modalEmp = null; modalDate = null;
-}
-
-function saveModal() {
-  if (!modalEmp || !modalDate) return;
-  var text = document.getElementById("modalText").value.trim();
-  if (!specialData[modalEmp]) specialData[modalEmp] = {};
-  specialData[modalEmp][modalDate] = text;
-  if (!tableData[modalEmp]) tableData[modalEmp] = {};
-  tableData[modalEmp][modalDate] = "מיוחד";
-  try { localStorage.setItem("hr_special", JSON.stringify(specialData)); } catch(ex) {}
-  saveToSheets();
-  render();
-  closeModal();
-}
-
-function deleteSpecial() {
-  if (!modalEmp || !modalDate) return;
-  if (specialData[modalEmp]) delete specialData[modalEmp][modalDate];
-  if (tableData[modalEmp]) tableData[modalEmp][modalDate] = "";
-  try { localStorage.setItem("hr_special", JSON.stringify(specialData)); } catch(ex) {}
-  saveToSheets();
-  render();
-  closeModal();
-}
-
-function getSystemPrompt() {
-  var dates = WD.map(function(d) { return DN[d.getDay()] + " " + fmt(d); }).join(", ");
+function buildSystemPrompt() {
+  var dates = WD.map(function(d) { return DN[d.getDay()] + ' ' + fmt(d); }).join(', ');
   var today = fmt(new Date());
   var stateLines = [];
   EMP.forEach(function(e) {
     var entries = [];
     WD.forEach(function(d) {
-      var v = (tableData[e] && tableData[e][fmt(d)]) || "";
-      if (v) entries.push(DN[d.getDay()] + " " + fmt(d) + ":" + v);
+      var v = (tableData[e] && tableData[e][fmt(d)]) || '';
+      if (v) entries.push(DN[d.getDay()] + ' ' + fmt(d) + ':' + v);
     });
-    if (entries.length) stateLines.push(e + ": " + entries.join(", "));
+    if (entries.length) stateLines.push(e + ': ' + entries.join(', '));
   });
-  var state = stateLines.length ? stateLines.join("
-") : "אין היעדרויות";
-  return "אתה עוזר HR לניהול נוכחות חיילים. ענה תמיד בעברית.
-" +
-    "עובדים: " + EMP.join(", ") + "
-" +
-    "ימי עבודה (ראשון-חמישי): " + dates + "
-" +
-    "היום: " + today + "
-
-" +
-    "מצב נוכחי:
-" + state + "
-
-" +
-    "חוקים:
-" +
-    "1. ימי מחלה נספרים כימים קלנדריים רצופים כולל שישי ושבת. שישי/שבת לא מופיעים בטבלה.
-" +
-    "   דוגמה: שבוע מראשון 07/06 = 07-13/06, בטבלה: 07,08,09,10,11/06.
-" +
-    "2. אם לא צוין יום התחלה, התחל מהיום הבא.
-" +
-    "3. סוגי היעדרות: הפנייה, חופש, גימל, לא מגיע, אפטר, מיוחד
-" +
-    "4. אפטר = העובד יוצא באותו יום וחוזר למחרת.
-" +
-    "5. מיוחד = אירוע מיוחד (כנס וכו'). הפרטים יוזנו ידנית בלחיצה על התא.
-" +
-    "6. ביטול כללי (כל ההיעדרויות) = action:remove_all
-" +
-    "7. ביטול ספציפי = action:remove עם תאריך
-" +
-    "8. הוספה = action:add
-
-" +
-    "חשוב מאוד: ענה אך ורק ב-JSON תקני ללא טקסט נוסף.
-" +
-    'כשמבין: {"changes":[{"employee":"שם","date":"DD/MM","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור","needs_clarification":false}
-' +
-    'כשצריך הבהרה: {"changes":[],"summary":"","needs_clarification":true,"question":"שאלה"}';
+  var state = stateLines.length ? stateLines.join(' | ') : 'אין היעדרויות';
+  return [
+    'אתה עוזר HR לניהול נוכחות חיילים. ענה תמיד בעברית.',
+    'עובדים: ' + EMP.join(', '),
+    'ימי עבודה (ראשון-חמישי): ' + dates,
+    'היום: ' + today,
+    'מצב נוכחי: ' + state,
+    '',
+    'חוקים:',
+    '1. ימי מחלה נספרים כימים קלנדריים רצופים כולל שישי ושבת. שישי/שבת לא מופיעים בטבלה.',
+    '   דוגמה: שבוע מראשון 07/06 = 07-13/06, בטבלה: 07,08,09,10,11/06.',
+    '2. אם לא צוין יום התחלה, התחל מהיום הבא.',
+    '3. סוגי היעדרות: הפנייה, חופש, גימל, לא מגיע, אפטר, מיוחד',
+    '4. אפטר = יוצא באותו יום וחוזר למחרת.',
+    '5. מיוחד = אירוע מיוחד, פרטים יוזנו ידנית.',
+    '6. ביטול כללי = action:remove_all (ללא תאריך)',
+    '7. ביטול ספציפי = action:remove עם תאריך',
+    '8. הוספה = action:add',
+    '',
+    'חשוב: ענה אך ורק ב-JSON תקני ללא טקסט נוסף.',
+    'כשמבין: {"changes":[{"employee":"שם","date":"DD/MM","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור","needs_clarification":false}',
+    'כשצריך הבהרה: {"changes":[],"summary":"","needs_clarification":true,"question":"שאלה"}'
+  ].join('\n');
 }
 
 function sendMsg() {
-  var msg = document.getElementById("msg").value.trim();
-  if (!msg) { setSt("אנא כתוב הודעה","err"); return; }
-  var key = localStorage.getItem("hr_apikey") || "";
-  if (!key) { setSt("אנא הכנס מפתח API","err"); return; }
-  document.getElementById("sendBtn").disabled = true;
-  setSt("מנתח הודעה...","loading");
-  chatHistory.push({role:"user", content: msg});
+  var msg = document.getElementById('msg').value.trim();
+  if (!msg) { setSt('אנא כתוב הודעה','err'); return; }
+  var key = localStorage.getItem('hr_apikey') || '';
+  if (!key) { setSt('אנא הכנס מפתח API','err'); return; }
+  document.getElementById('sendBtn').disabled = true;
+  setSt('מנתח הודעה...','loading');
+  chatHistory.push({role:'user', content: msg});
   fetch(PROXY_URL, {
-    method: "POST",
-    headers: {"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01"},
-    body: JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:getSystemPrompt(),messages:chatHistory})
+    method: 'POST',
+    headers: {'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},
+    body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:buildSystemPrompt(),messages:chatHistory})
   })
   .then(function(r) {
-    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||"שגיאת שרת "+r.status); });
+    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||'שגיאת שרת '+r.status); });
     return r.json();
   })
   .then(function(result) {
-    if (!result || !result.content) throw new Error((result&&result.error&&result.error.message)||"תשובה ריקה");
-    var text = result.content.filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
-    chatHistory.push({role:"assistant", content: text});
+    if (!result || !result.content) throw new Error((result&&result.error&&result.error.message)||'תשובה ריקה');
+    var text = result.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
+    chatHistory.push({role:'assistant', content: text});
     var parsed;
     try {
-      var clean = text.trim().replace(/^```json
-?/,"").replace(/```$/,"").trim();
+      var clean = text.trim().replace(/^```json\n?/,'').replace(/```$/,'').trim();
       parsed = JSON.parse(clean);
     } catch(e1) {
       try {
-        var s = text.indexOf("{"), en = text.lastIndexOf("}");
+        var s = text.indexOf('{'), en = text.lastIndexOf('}');
         parsed = JSON.parse(text.slice(s, en+1));
-      } catch(e2) { throw new Error("תשובה לא תקינה"); }
+      } catch(e2) { throw new Error('תשובה לא תקינה'); }
     }
     if (parsed.needs_clarification) {
-      setSt("? " + parsed.question, "");
-      document.getElementById("msg").value = "";
+      setSt('? ' + parsed.question, '');
+      document.getElementById('msg').value = '';
     } else {
       var changes = parsed.changes || [];
       if (changes.length > 0) {
         changes.forEach(function(a) {
           var emp = null;
           for (var i = 0; i < EMP.length; i++) {
-            if (EMP[i]===a.employee || EMP[i].includes(a.employee) || a.employee.includes(EMP[i].split(" ")[0])) {
+            if (EMP[i]===a.employee || EMP[i].indexOf(a.employee)!==-1 || a.employee.indexOf(EMP[i].split(' ')[0])!==-1) {
               emp = EMP[i]; break;
             }
           }
           if (emp) {
             if (!tableData[emp]) tableData[emp] = {};
-            if (a.action === "remove_all") {
-              WD.forEach(function(d){ tableData[emp][fmt(d)] = ""; });
-            } else if (a.action === "remove" && a.date) {
-              tableData[emp][a.date] = "";
-            } else if (a.action === "add" && a.date) {
-              tableData[emp][a.date] = a.reason || "לא מגיע";
+            if (a.action === 'remove_all') {
+              WD.forEach(function(d){ tableData[emp][fmt(d)] = ''; });
+            } else if (a.action === 'remove' && a.date) {
+              tableData[emp][a.date] = '';
+            } else if (a.action === 'add' && a.date) {
+              tableData[emp][a.date] = a.reason || 'לא מגיע';
             }
           }
         });
         saveToSheets(); render();
-        setSt("✓ " + parsed.summary, "ok");
+        setSt('\u2713 ' + parsed.summary, 'ok');
         chatHistory = [];
       } else {
-        setSt("⚠ " + (parsed.summary || "לא הבנתי"), "err");
+        setSt('\u26a0 ' + (parsed.summary || 'לא הבנתי'), 'err');
         chatHistory = [];
       }
-      document.getElementById("msg").value = "";
+      document.getElementById('msg').value = '';
     }
   })
-  .catch(function(e) { setSt("שגיאה: " + e.message, "err"); chatHistory = []; })
-  .finally(function() { document.getElementById("sendBtn").disabled = false; });
+  .catch(function(e) { setSt('שגיאה: ' + e.message, 'err'); chatHistory = []; })
+  .finally(function() { document.getElementById('sendBtn').disabled = false; });
 }
 
 function copyReport() {
@@ -435,41 +404,33 @@ function copyReport() {
   while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 1);
   var dateKey = fmt(tomorrow);
   var dayName = DN[tomorrow.getDay()];
-  var lines = "דוח נוכחות - יום " + dayName + " " + dateKey + "
----
-";
+  var lines = 'דוח נוכחות - יום ' + dayName + ' ' + dateKey + '\n---\n';
   EMP.forEach(function(e) {
-    var v = (tableData[e] && tableData[e][dateKey]) || "";
-    var loc = "בסיס";
-    if (v==="גימל") loc="גימלים";
-    else if (v==="הפנייה") loc="הפנייה";
-    else if (v==="חופש") loc="חופשה שנתית";
-    else if (v==="לא מגיע") loc="לא מגיע";
-    else if (v==="אפטר") loc="אפטר";
-    else if (v==="מיוחד") {
-      var note = (specialData[e] && specialData[e][dateKey]) || "אירוע מיוחד";
-      loc = note;
-    }
-    lines += e + " - " + loc + "
-";
+    var v = (tableData[e] && tableData[e][dateKey]) || '';
+    var loc = 'בסיס';
+    if (v==='גימל') loc='גימלים';
+    else if (v==='הפנייה') loc='הפנייה';
+    else if (v==='חופש') loc='חופשה שנתית';
+    else if (v==='לא מגיע') loc='לא מגיע';
+    else if (v==='אפטר') loc='אפטר';
+    else if (v==='מיוחד') loc=(specialData[e]&&specialData[e][dateKey])||'אירוע מיוחד';
+    lines += e + ' - ' + loc + '\n';
   });
   navigator.clipboard.writeText(lines).then(function() {
-    var b = document.querySelectorAll(".btn-sm")[0];
-    var o = b.textContent; b.textContent = "הועתק!";
+    var b = document.querySelectorAll('.btn-sm')[0];
+    var o = b.textContent; b.textContent = 'הועתק!';
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
 
 function copyExcel() {
-  var t = "שם החייל	" + WD.map(function(d){ return DN[d.getDay()]+" "+fmt(d); }).join("	") + "
-";
+  var t = 'שם החייל\t' + WD.map(function(d){ return DN[d.getDay()]+' '+fmt(d); }).join('\t') + '\n';
   EMP.forEach(function(e) {
-    t += e + "	" + WD.map(function(d){ return (tableData[e]&&tableData[e][fmt(d)])||""; }).join("	") + "
-";
+    t += e + '\t' + WD.map(function(d){ return (tableData[e]&&tableData[e][fmt(d)])||''; }).join('\t') + '\n';
   });
   navigator.clipboard.writeText(t).then(function() {
-    var b = document.querySelectorAll(".btn-sm")[1];
-    var o = b.textContent; b.textContent = "הועתק!";
+    var b = document.querySelectorAll('.btn-sm')[1];
+    var o = b.textContent; b.textContent = 'הועתק!';
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
