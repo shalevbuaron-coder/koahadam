@@ -9,10 +9,15 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--bg:#0c0c10;--surface:#15151c;--surface2:#1e1e28;--border:#28283a;--text:#eeedf8;--muted:#6e6d85;--accent:#6c5ce7;--accent2:#a29bfe;--green:#00b894;--blue:#74b9ff;--yellow:#fdcb6e;--red:#ff7675;--pink:#fd79a8;}
 body{font-family:"Rubik",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem;}
-.app{max-width:820px;margin:0 auto;}
+.app{max-width:900px;margin:0 auto;}
 .header{text-align:center;margin-bottom:2rem;}
 .header h1{font-size:1.6rem;font-weight:600;}
 .header p{font-size:13px;color:var(--muted);margin-top:6px;}
+.tabs{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:1.5rem;}
+.tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;border-radius:9px;color:var(--muted);transition:all .2s;}
+.tab.active{background:var(--accent);color:#fff;}
+.pane{display:none;}
+.pane.active{display:block;}
 .setup-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:1.5rem;}
 .setup-box label{font-size:12px;color:var(--muted);display:block;margin-bottom:8px;}
 .setup-row{display:flex;gap:10px;}
@@ -36,7 +41,7 @@ body{font-family:"Rubik",sans-serif;background:var(--bg);color:var(--text);min-h
 .status.loading{color:var(--accent2);border-color:#6c5ce733;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{width:14px;height:14px;border:2px solid var(--accent2);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:1.5rem;}
 .card-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);}
 .card-head span{font-size:14px;font-weight:500;}
 .head-btns{display:flex;gap:8px;}
@@ -62,15 +67,42 @@ tr:hover td{background:#ffffff06;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);}
 .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;align-items:center;justify-content:center;}
 .overlay.open{display:flex;}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:360px;direction:rtl;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:400px;direction:rtl;}
 .modal h3{font-size:14px;font-weight:500;margin-bottom:12px;color:var(--muted);}
 .modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;resize:none;margin-bottom:12px;}
 .modal textarea:focus{border-color:var(--accent);}
+.modal input[type=text]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;margin-bottom:12px;}
+.modal input[type=text]:focus{border-color:var(--accent);}
 .modal-btns{display:flex;gap:8px;}
 .mbtn{border:none;border-radius:8px;padding:8px 16px;font-family:"Rubik",sans-serif;font-size:13px;cursor:pointer;}
 .mbtn-s{background:var(--accent);color:#fff;}
 .mbtn-c{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
 .mbtn-d{background:#ff767518;color:var(--red);border:1px solid #ff767533;}
+/* Settings */
+.emp-list{padding:0 18px 12px;}
+.emp-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.emp-row:last-child{border-bottom:none;}
+.emp-name{font-size:13px;font-weight:500;}
+.emp-actions{display:flex;gap:6px;align-items:center;}
+.btn-del{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--red);font-size:12px;cursor:pointer;}
+.btn-del:hover{background:#ff767518;}
+.add-emp-row{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--border);}
+.add-emp-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;}
+.add-emp-row input:focus{border-color:var(--accent);}
+.btn-add{background:var(--accent);border:none;border-radius:10px;padding:9px 18px;color:#fff;font-family:"Rubik",sans-serif;font-size:13px;font-weight:500;cursor:pointer;}
+/* Vacation tracker */
+.vac-table{width:100%;border-collapse:collapse;font-size:13px;}
+.vac-table th{padding:10px 16px;background:var(--surface2);color:var(--muted);font-weight:400;text-align:right;border-bottom:1px solid var(--border);}
+.vac-table td{padding:10px 16px;border-bottom:1px solid var(--border);}
+.vac-table tr:last-child td{border-bottom:none;}
+.vac-table tr:hover td{background:#ffffff06;}
+.vac-count{font-size:18px;font-weight:600;color:var(--accent2);}
+.vac-bar-wrap{height:6px;background:var(--surface2);border-radius:3px;width:100px;display:inline-block;vertical-align:middle;}
+.vac-bar{height:6px;background:var(--accent);border-radius:3px;}
+.vac-adj{display:flex;align-items:center;gap:6px;}
+.vac-adj button{background:var(--surface2);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;color:var(--text);font-size:14px;cursor:pointer;line-height:1;}
+.vac-adj button:hover{border-color:var(--accent);}
+.vac-adj span{font-size:13px;min-width:24px;text-align:center;}
 </style>
 </head>
 <body>
@@ -79,41 +111,74 @@ tr:hover td{background:#ffffff06;}
     <h1>ניהול נוכחות</h1>
     <p>כתוב הודעה — המערכת תעדכן את הטבלה אוטומטית</p>
   </div>
-  <div class="setup-box">
-    <label>מפתח Anthropic API (נשמר על המחשב שלך בלבד)</label>
-    <div class="setup-row">
-      <input type="password" id="apiKey" placeholder="sk-ant-..." />
-      <button class="btn-save" onclick="saveKey()">שמור</button>
-    </div>
-    <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a></div>
+
+  <div class="tabs">
+    <div class="tab active" id="tab-main" onclick="switchTab('main')">נוכחות</div>
+    <div class="tab" id="tab-vac" onclick="switchTab('vac')">חופשות</div>
+    <div class="tab" id="tab-settings" onclick="switchTab('settings')">הגדרות</div>
   </div>
-  <div class="input-area">
-    <label>הודעה חדשה</label>
-    <div class="input-row">
-      <input type="text" id="msg" placeholder="לדוגמה: אורי חותם חופש ביום שלישי" onkeydown="if(event.key==='Enter')sendMsg()" />
-      <button class="btn-send" id="sendBtn" onclick="sendMsg()">שלח</button>
+
+  <!-- MAIN TAB -->
+  <div class="pane active" id="pane-main">
+    <div class="setup-box">
+      <label>מפתח Anthropic API</label>
+      <div class="setup-row">
+        <input type="password" id="apiKey" placeholder="sk-ant-..." />
+        <button class="btn-save" onclick="saveKey()">שמור</button>
+      </div>
+      <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a></div>
     </div>
-  </div>
-  <div class="status" id="status">מוכן</div>
-  <div class="card">
-    <div class="card-head">
-      <span>שבועיים קדימה</span>
-      <div class="head-btns">
-        <button class="btn-sm" onclick="copyReport()">דוח 1</button>
-        <button class="btn-sm" onclick="copyExcel()">העתק ל-Excel</button>
+    <div class="input-area">
+      <label>הודעה חדשה</label>
+      <div class="input-row">
+        <input type="text" id="msg" placeholder="לדוגמה: אורי חותם חופש ביום שלישי" onkeydown="if(event.key==='Enter')sendMsg()" />
+        <button class="btn-send" id="sendBtn" onclick="sendMsg()">שלח</button>
       </div>
     </div>
-    <div class="scroll"><table id="tbl"></table></div>
-    <div class="legend">
-      <span class="badge bh">הפנייה</span>
-      <span class="badge bc">חופש</span>
-      <span class="badge bg">גימל</span>
-      <span class="badge bn">לא מגיע</span>
-      <span class="badge ba">אפטר</span>
-      <span class="badge bm">מיוחד ✎</span>
+    <div class="status" id="status">מוכן</div>
+    <div class="card">
+      <div class="card-head">
+        <span>שבועיים קדימה</span>
+        <div class="head-btns">
+          <button class="btn-sm" onclick="copyReport()">דוח 1</button>
+          <button class="btn-sm" onclick="copyExcel()">העתק ל-Excel</button>
+        </div>
+      </div>
+      <div class="scroll"><table id="tbl"></table></div>
+      <div class="legend">
+        <span class="badge bh">הפנייה</span>
+        <span class="badge bc">חופש</span>
+        <span class="badge bg">גימל</span>
+        <span class="badge bn">לא מגיע</span>
+        <span class="badge ba">אפטר</span>
+        <span class="badge bm">מיוחד ✎</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VACATION TAB -->
+  <div class="pane" id="pane-vac">
+    <div class="card">
+      <div class="card-head"><span>מעקב ימי חופשה — 2026</span></div>
+      <div class="scroll"><table class="vac-table" id="vacTbl"></table></div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);text-align:center;">ספירה אוטומטית מהטבלה + התאמה ידנית לימים שלא מופיעים בשבועיים הקרובים</p>
+  </div>
+
+  <!-- SETTINGS TAB -->
+  <div class="pane" id="pane-settings">
+    <div class="card">
+      <div class="card-head"><span>ניהול עובדים</span></div>
+      <div class="emp-list" id="empList"></div>
+      <div class="add-emp-row">
+        <input type="text" id="newEmpInput" placeholder="שם העובד החדש" onkeydown="if(event.key==='Enter')addEmp()" />
+        <button class="btn-add" onclick="addEmp()">הוסף</button>
+      </div>
     </div>
   </div>
 </div>
+
+<!-- Modal -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
@@ -125,14 +190,17 @@ tr:hover td{background:#ffffff06;}
     </div>
   </div>
 </div>
+
 <script>
 var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec';
 var PROXY_URL = 'https://hr-proxy.shalevbuaron.workers.dev';
-var EMP = ["איתן ליבשין", "איתן רוזנטל", "אורי דויטש", "בר ורוטנקר", "מור ריבק", "רוני קוטליארנקו", "שחר שטייר", "גיא אליאס", "אדר ביטון", "איתי בנס"];
+var DEFAULT_EMP = ["איתן ליבשין", "איתן רוזנטל", "אורי דויטש", "בר ורוטנקר", "מור ריבק", "רוני קוטליארנקו", "שחר שטייר", "גיא אליאס", "אדר ביטון", "איתי בנס"];
 var DN = {0:'ראשון',1:'שני',2:'שלישי',3:'רביעי',4:'חמישי'};
 var WD = [];
 var tableData = {};
 var specialData = {};
+var vacData = {};
+var EMP = [];
 var chatHistory = [];
 var modalEmp = null, modalDate = null;
 
@@ -157,6 +225,15 @@ function setSt(msg, cls) {
   el.innerHTML = cls === 'loading' ? '<div class="spinner"></div><span>' + msg + '</span>' : msg;
 }
 
+function switchTab(t) {
+  document.querySelectorAll('.tab').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.pane').forEach(function(el){ el.classList.remove('active'); });
+  document.getElementById('tab-'+t).classList.add('active');
+  document.getElementById('pane-'+t).classList.add('active');
+  if (t === 'vac') renderVac();
+  if (t === 'settings') renderSettings();
+}
+
 function saveKey() {
   var k = document.getElementById('apiKey').value.trim();
   if (!k) { setSt('אנא הכנס מפתח API','err'); return; }
@@ -166,9 +243,87 @@ function saveKey() {
   setSt('מפתח נשמר','ok');
 }
 
+// Count vacation days used this year from tableData
+function countVacDays(emp) {
+  var manual = (vacData[emp] && vacData[emp].manual) || 0;
+  var auto = 0;
+  var year = new Date().getFullYear();
+  var allDates = Object.keys(tableData[emp] || {});
+  allDates.forEach(function(dateStr) {
+    if (tableData[emp][dateStr] === 'חופש') {
+      var parts = dateStr.split('/');
+      if (parts.length === 2) {
+        var d = new Date(year, parseInt(parts[1])-1, parseInt(parts[0]));
+        if (d.getFullYear() === year) auto++;
+      }
+    }
+  });
+  return auto + manual;
+}
+
+function renderVac() {
+  var h = '<thead><tr><th>שם החייל</th><th style="text-align:center">ימי חופש שנוצלו</th><th style="text-align:center">התאמה ידנית</th></tr></thead><tbody>';
+  EMP.forEach(function(e) {
+    var total = countVacDays(e);
+    h += '<tr>';
+    h += '<td style="font-weight:500">' + e + '</td>';
+    h += '<td style="text-align:center"><span class="vac-count">' + total + '</span></td>';
+    h += '<td style="text-align:center"><div class="vac-adj">';
+    h += '<button onclick="adjVac(\'' + encodeURIComponent(e) + '\',-1)">-</button>';
+    h += '<span>' + ((vacData[e] && vacData[e].manual) || 0) + '</span>';
+    h += '<button onclick="adjVac(\'' + encodeURIComponent(e) + '\',1)">+</button>';
+    h += '</div></td>';
+    h += '</tr>';
+  });
+  h += '</tbody>';
+  document.getElementById('vacTbl').innerHTML = h;
+}
+
+function adjVac(empEnc, delta) {
+  var emp = decodeURIComponent(empEnc);
+  if (!vacData[emp]) vacData[emp] = {manual:0};
+  vacData[emp].manual = (vacData[emp].manual || 0) + delta;
+  try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
+  renderVac();
+}
+
+function renderSettings() {
+  var h = '';
+  EMP.forEach(function(e, i) {
+    h += '<div class="emp-row">';
+    h += '<span class="emp-name">' + e + '</span>';
+    h += '<div class="emp-actions"><button class="btn-del" onclick="removeEmp(' + i + ')">הסר</button></div>';
+    h += '</div>';
+  });
+  document.getElementById('empList').innerHTML = h;
+}
+
+function addEmp() {
+  var name = document.getElementById('newEmpInput').value.trim();
+  if (!name) return;
+  if (EMP.indexOf(name) !== -1) { alert('עובד זה כבר קיים'); return; }
+  EMP.push(name);
+  saveEmpList();
+  document.getElementById('newEmpInput').value = '';
+  renderSettings();
+  render();
+}
+
+function removeEmp(idx) {
+  var name = EMP[idx];
+  if (!confirm('להסיר את ' + name + '?')) return;
+  EMP.splice(idx, 1);
+  saveEmpList();
+  renderSettings();
+  render();
+}
+
+function saveEmpList() {
+  try { localStorage.setItem('hr_emplist', JSON.stringify(EMP)); } catch(ex) {}
+}
+
 function getBadge(v, e, dateKey) {
   var empEnc = encodeURIComponent(e);
-  var dateEnc = encodeURIComponent(dateKey);
   if (v === 'הפנייה' || v === 'רופא') return '<span class="badge bh">הפנייה</span>';
   if (v === 'חופש') return '<span class="badge bc">חופש</span>';
   if (v === 'גימל') return '<span class="badge bg">גימל</span>';
@@ -177,16 +332,14 @@ function getBadge(v, e, dateKey) {
   if (v === 'מיוחד') {
     var note = (specialData[e] && specialData[e][dateKey]) || '';
     var label = note ? (note.length > 8 ? note.slice(0,8) + '..' : note) : 'מיוחד';
-    return '<span class="badge bm" data-emp="' + empEnc + '" data-date="' + dateEnc + '" onclick="handleBadgeClick(this)">' + label + ' \u270e</span>';
+    return '<span class="badge bm" data-emp="' + empEnc + '" data-date="' + dateKey + '" onclick="handleBadgeClick(this)">' + label + ' \u270e</span>';
   }
   if (v) return '<span class="badge bn">' + v + '</span>';
-  return '<span class="dot" data-emp="' + empEnc + '" data-date="' + dateEnc + '" onclick="handleBadgeClick(this)"></span>';
+  return '<span class="dot" data-emp="' + empEnc + '" data-date="' + dateKey + '" onclick="handleBadgeClick(this)"></span>';
 }
 
 function handleBadgeClick(el) {
-  var emp = decodeURIComponent(el.getAttribute('data-emp'));
-  var date = decodeURIComponent(el.getAttribute('data-date'));
-  openModal(emp, date);
+  openModal(decodeURIComponent(el.getAttribute('data-emp')), el.getAttribute('data-date'));
 }
 
 function render() {
@@ -255,7 +408,9 @@ function saveToSheets() {
 
 function load() {
   WD = getWD();
+  try { var el = localStorage.getItem('hr_emplist'); EMP = el ? JSON.parse(el) : DEFAULT_EMP.slice(); } catch(e) { EMP = DEFAULT_EMP.slice(); }
   try { var s = localStorage.getItem('hr_special'); if (s) specialData = JSON.parse(s); } catch(e) {}
+  try { var v = localStorage.getItem('hr_vac'); if (v) vacData = JSON.parse(v); } catch(e) {}
   try {
     var k = localStorage.getItem('hr_apikey');
     if (k) {
@@ -289,7 +444,7 @@ function load() {
       }
       render(); setSt('מוכן', '');
     })
-    .catch(function() { render(); setSt('שגיאה בטעינה מהענן', 'err'); });
+    .catch(function() { render(); setSt('מוכן', ''); });
 }
 
 function buildSystemPrompt() {
@@ -319,7 +474,7 @@ function buildSystemPrompt() {
     '3. סוגי היעדרות: הפנייה, חופש, גימל, לא מגיע, אפטר, מיוחד',
     '4. אפטר = יוצא באותו יום וחוזר למחרת.',
     '5. מיוחד = אירוע מיוחד, פרטים יוזנו ידנית.',
-    '6. ביטול כללי = action:remove_all (ללא תאריך)',
+    '6. ביטול כללי = action:remove_all',
     '7. ביטול ספציפי = action:remove עם תאריך',
     '8. הוספה = action:add',
     '',
@@ -355,10 +510,8 @@ function sendMsg() {
       var clean = text.trim().replace(/^```json\n?/,'').replace(/```$/,'').trim();
       parsed = JSON.parse(clean);
     } catch(e1) {
-      try {
-        var s = text.indexOf('{'), en = text.lastIndexOf('}');
-        parsed = JSON.parse(text.slice(s, en+1));
-      } catch(e2) { throw new Error('תשובה לא תקינה'); }
+      try { parsed = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}')+1)); }
+      catch(e2) { throw new Error('תשובה לא תקינה'); }
     }
     if (parsed.needs_clarification) {
       setSt('? ' + parsed.question, '');
@@ -369,19 +522,13 @@ function sendMsg() {
         changes.forEach(function(a) {
           var emp = null;
           for (var i = 0; i < EMP.length; i++) {
-            if (EMP[i]===a.employee || EMP[i].indexOf(a.employee)!==-1 || a.employee.indexOf(EMP[i].split(' ')[0])!==-1) {
-              emp = EMP[i]; break;
-            }
+            if (EMP[i]===a.employee || EMP[i].indexOf(a.employee)!==-1 || a.employee.indexOf(EMP[i].split(' ')[0])!==-1) { emp=EMP[i]; break; }
           }
           if (emp) {
             if (!tableData[emp]) tableData[emp] = {};
-            if (a.action === 'remove_all') {
-              WD.forEach(function(d){ tableData[emp][fmt(d)] = ''; });
-            } else if (a.action === 'remove' && a.date) {
-              tableData[emp][a.date] = '';
-            } else if (a.action === 'add' && a.date) {
-              tableData[emp][a.date] = a.reason || 'לא מגיע';
-            }
+            if (a.action === 'remove_all') { WD.forEach(function(d){ tableData[emp][fmt(d)] = ''; }); }
+            else if (a.action === 'remove' && a.date) { tableData[emp][a.date] = ''; }
+            else if (a.action === 'add' && a.date) { tableData[emp][a.date] = a.reason || 'לא מגיע'; }
           }
         });
         saveToSheets(); render();
@@ -403,8 +550,7 @@ function copyReport() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 1);
   var dateKey = fmt(tomorrow);
-  var dayName = DN[tomorrow.getDay()];
-  var lines = 'דוח נוכחות - יום ' + dayName + ' ' + dateKey + '\n---\n';
+  var lines = 'דוח נוכחות - יום ' + DN[tomorrow.getDay()] + ' ' + dateKey + '\n---\n';
   EMP.forEach(function(e) {
     var v = (tableData[e] && tableData[e][dateKey]) || '';
     var loc = 'בסיס';
