@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0074)file:///C:/Users/shale/Downloads/%D7%A0%D7%95%D7%9B%D7%97%D7%95%D7%AA.html -->
-<html lang="he" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ניהול נוכחות</title>
-<link href="./index_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -72,21 +72,23 @@ tr:hover td{background:#ffffff06;}
   <div class="setup-box">
     <label>מפתח Anthropic API (נשמר על המחשב שלך בלבד)</label>
     <div class="setup-row">
-      <input type="password" id="apiKey" placeholder="sk-ant-...">
+      <input type="password" id="apiKey" placeholder="sk-ant-..." />
       <button class="btn-save" onclick="saveKey()">שמור</button>
     </div>
-    <div class="api-status ok" id="apiStatus">מפתח שמור</div>
+    <div class="api-status" id="apiStatus">
+      לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a>
+    </div>
   </div>
 
   <div class="input-area">
     <label>הודעה חדשה</label>
     <div class="input-row">
-      <input type="text" id="msg" placeholder="לדוגמה: אורי חותם חופש ביום שלישי" onkeydown="if(event.key===&#39;Enter&#39;)sendMsg()">
+      <input type="text" id="msg" placeholder="לדוגמה: אורי חותם חופש ביום שלישי" onkeydown="if(event.key==='Enter')sendMsg()" />
       <button class="btn-send" id="sendBtn" onclick="sendMsg()">שלח</button>
     </div>
   </div>
 
-  <div class="status" id="status">מוכן (לא נטען מהענן)</div>
+  <div class="status" id="status">מוכן</div>
 
   <div class="card">
     <div class="card-head">
@@ -96,7 +98,7 @@ tr:hover td{background:#ffffff06;}
         <button class="btn-copy" onclick="copyExcel()">העתק ל-Excel</button>
       </div>
     </div>
-    <div class="scroll"><table id="tbl"><thead><tr><th class="nc">שם החייל</th><th>שני<br><span style="font-size:10px;opacity:.5">08/06</span></th><th>שלישי<br><span style="font-size:10px;opacity:.5">09/06</span></th><th>רביעי<br><span style="font-size:10px;opacity:.5">10/06</span></th><th>חמישי<br><span style="font-size:10px;opacity:.5">11/06</span></th><th>ראשון<br><span style="font-size:10px;opacity:.5">14/06</span></th><th>שני<br><span style="font-size:10px;opacity:.5">15/06</span></th><th>שלישי<br><span style="font-size:10px;opacity:.5">16/06</span></th><th>רביעי<br><span style="font-size:10px;opacity:.5">17/06</span></th><th>חמישי<br><span style="font-size:10px;opacity:.5">18/06</span></th><th>ראשון<br><span style="font-size:10px;opacity:.5">21/06</span></th></tr></thead><tbody><tr><td class="nm">איתן ליבשין</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">איתן רוזנטל</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">אורי דויטש</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">בר ורוטנקר</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">מור ריבק</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">רוני קוטליארנקו</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">שחר שטייר</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">גיא אליאס</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">אדר ביטון</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr><tr><td class="nm">איתי בנס</td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td><td><span class="dot"></span></td></tr></tbody></table></div>
+    <div class="scroll"><table id="tbl"></table></div>
     <div class="legend">
       <span class="badge bh">הפנייה</span>
       <span class="badge bc">חופש</span>
@@ -141,8 +143,12 @@ function load() {
   } catch(e) {}
   setSt("טוען נתונים מהענן...", "loading");
   fetch(SHEETS_URL)
-    .then(function(r){ return r.json(); })
+    .then(function(r){
+      console.log("Sheets response status:", r.status);
+      return r.json();
+    })
     .then(function(result){
+      console.log("Sheets data:", JSON.stringify(result).slice(0,200));
       tableData = {};
       var rows = result.data || [];
       // row 0 = header (dates), rows 1+ = employee data
@@ -427,5 +433,5 @@ function copyExcel() {
 
 window.onload = load;
 </script>
-
-</body></html>
+</body>
+</html>
