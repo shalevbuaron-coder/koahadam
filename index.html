@@ -151,16 +151,24 @@ function load() {
       console.log("Sheets data:", JSON.stringify(result).slice(0,200));
       tableData = {};
       var rows = result.data || [];
-      // row 0 = header (dates), rows 1+ = employee data
       if (rows.length > 1) {
-        var headers = rows[0]; // ["שם", "07/06", "08/06", ...]
+        var headers = rows[0];
         for (var i = 1; i < rows.length; i++) {
           var empName = rows[i][0];
           if (!empName) continue;
           tableData[empName] = {};
           for (var j = 1; j < headers.length; j++) {
-            if (headers[j] && rows[i][j]) {
-              tableData[empName][headers[j]] = rows[i][j];
+            var hdr = headers[j];
+            if (!hdr) continue;
+            // Convert ISO date format back to DD/MM
+            if (typeof hdr === "string" && hdr.match(/^\d{4}-\d{2}-\d{2}/)) {
+              var d = new Date(hdr);
+              hdr = String(d.getDate()).padStart(2,"0") + "/" + String(d.getMonth()+1).padStart(2,"0");
+            } else if (hdr instanceof Date) {
+              hdr = String(hdr.getDate()).padStart(2,"0") + "/" + String(hdr.getMonth()+1).padStart(2,"0");
+            }
+            if (rows[i][j]) {
+              tableData[empName][hdr] = rows[i][j];
             }
           }
         }
