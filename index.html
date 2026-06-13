@@ -58,7 +58,18 @@ tr:hover td{background:#ffffff06;}
 .bc{background:#00b89418;color:var(--green);}
 .bg{background:#fdcb6e18;color:var(--yellow);}
 .bn{background:#ff767518;color:var(--red);}
+.ba2{background:#fd79a818;color:#fd79a8;}
+.bm{background:#a29bfe18;color:var(--accent2);cursor:pointer;text-decoration:underline dotted;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;}
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;justify-content:center;align-items:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:360px;direction:rtl;}
+.modal h3{font-size:15px;font-weight:500;margin-bottom:12px;}
+.modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;resize:none;margin-bottom:12px;}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end;}
+.modal-btns button{border:none;border-radius:8px;padding:8px 16px;font-family:"Rubik",sans-serif;font-size:13px;cursor:pointer;}
+.modal-save{background:var(--accent);color:#fff;}
+.modal-cancel{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
 .legend{display:flex;gap:12px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);}
 </style>
 </head>
@@ -104,6 +115,19 @@ tr:hover td{background:#ffffff06;}
       <span class="badge bc">חופש</span>
       <span class="badge bg">גימל</span>
       <span class="badge bn">לא מגיע</span>
+      <span class="badge ba2">אפטר</span>
+      <span class="badge bm">מיוחד</span>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
+      <textarea id="modalText" rows="3" placeholder="תאר את האירוע המיוחד..."></textarea>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeModal()">ביטול</button>
+        <button class="modal-save" onclick="saveModal()">שמור</button>
+      </div>
     </div>
   </div>
 </div>
@@ -113,6 +137,34 @@ var EMP = ["איתן ליבשין","איתן רוזנטל","אורי דויטש"
 var DN = {0:"ראשון",1:"שני",2:"שלישי",3:"רביעי",4:"חמישי"};
 var WD = getWD();
 var tableData = {};
+var specialData = {};
+var modalEmp = null;
+var modalDate = null;
+
+function openModal(emp, date) {
+  modalEmp = emp;
+  modalDate = date;
+  var existing = (specialData[emp] && specialData[emp][date]) || "";
+  document.getElementById("modalTitle").textContent = emp + " — " + date;
+  document.getElementById("modalText").value = existing;
+  document.getElementById("modalOverlay").classList.add("open");
+  setTimeout(function(){ document.getElementById("modalText").focus(); }, 100);
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").classList.remove("open");
+  modalEmp = null; modalDate = null;
+}
+
+function saveModal() {
+  if (!modalEmp || !modalDate) return;
+  var text = document.getElementById("modalText").value.trim();
+  if (!specialData[modalEmp]) specialData[modalEmp] = {};
+  specialData[modalEmp][modalDate] = text;
+  try { localStorage.setItem("hr_special", JSON.stringify(specialData)); } catch(e) {}
+  render();
+  closeModal();
+}
 
 function getWD() {
   var days = [], d = new Date();
@@ -132,6 +184,7 @@ function fmt(d) {
 var SHEETS_URL = "https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec";
 
 function load() {
+  try { var s = localStorage.getItem("hr_special"); if (s) specialData = JSON.parse(s); } catch(e) {}
   try {
     var k = localStorage.getItem("hr_apikey");
     if (k) {
@@ -235,11 +288,14 @@ function render() {
       var d = WD[di];
       var v = (tableData[e] && tableData[e][fmt(d)]) || "";
       var b = "";
-      if (v === "הפנייה" || v === "רופא") b = "<span class='badge bh'>הפנייה</span>";
-      else if (v === "חופש") b = "<span class='badge bc'>חופש</span>";
-      else if (v === "גימל" || v === "ג'") b = "<span class='badge bg'>גימל</span>";
-      else if (v) b = "<span class='badge bn'>" + v + "</span>";
-      else b = "<span class='dot'></span>";
+      var special = specialData[e] && specialData[e][fmt(d)];
+      if (v === "הפנייה" || v === "רופא") b = "<span class=\'badge bh\'>הפנייה</span>";
+      else if (v === "חופש") b = "<span class=\'badge bc\'>חופש</span>";
+      else if (v === "גימל" || v === "ג\'") b = "<span class=\'badge bg\'>גימל</span>";
+      else if (v === "אפטר") b = "<span class=\'badge ba2\'>אפטר</span>";
+      else if (v === "מיוחד") b = "<span class=\'badge bm\' onclick=\'openModal("" + e + "","" + fmt(d) + "")\'>" + (special ? special.slice(0,6) + (special.length>6?"..":"") : "מיוחד") + "</span>";
+      else if (v) b = "<span class=\'badge bn\'>" + v + "</span>";
+      else b = "<span class=\'dot\'></span>";
       h += "<td>" + b + "</td>";
     }
     h += "</tr>";
@@ -286,7 +342,7 @@ function getSystemPrompt() {
     "7. הוספה = action:add\n\n" +
     "חשוב מאוד: ענה אך ורק ב-JSON תקני, ללא טקסט לפני או אחרי, ללא הסברים.\n" +
     "כשאתה מבין את הבקשה:\n" +
-    '{"changes":[{"employee":"שם מדויק","date":"DD/MM או ריק אם remove_all","reason":"הפנייה|חופש|גימל|לא מגיע","action":"add|remove|remove_all"}],"summary":"תיאור קצר","needs_clarification":false}\n' +
+    '{"changes":[{"employee":"שם מדויק","date":"DD/MM או ריק אם remove_all","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור קצר","needs_clarification":false}\n' +
     "כשאתה צריך הבהרה:\n" +
     '{"changes":[],"summary":"","needs_clarification":true,"question":"שאלה קצרה בעברית"}';
 }
