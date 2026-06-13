@@ -442,10 +442,12 @@ function load() {
           }
         }
       }
-      if (result.special) {
+      console.log('special from sheets:', JSON.stringify(result.special));
+      if (result.special && Object.keys(result.special).length > 0) {
         specialData = result.special;
         try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
       }
+      console.log('specialData after load:', JSON.stringify(specialData));
       render(); setSt('מוכן', '');
     })
     .catch(function() { render(); setSt('מוכן', ''); });
