@@ -245,33 +245,49 @@ function saveKey() {
 
 // Count vacation days used this year from tableData
 function countVacDays(emp) {
+  // Total = stored cumulative + current visible in table
+  var stored = (vacData[emp] && vacData[emp].total) || 0;
   var manual = (vacData[emp] && vacData[emp].manual) || 0;
-  var auto = 0;
+  return stored + manual;
+}
+
+function syncVacFromTable() {
+  // Add vacation days visible in current table to stored totals
   var year = new Date().getFullYear();
-  var allDates = Object.keys(tableData[emp] || {});
-  allDates.forEach(function(dateStr) {
-    if (tableData[emp][dateStr] === 'חופש') {
-      var parts = dateStr.split('/');
-      if (parts.length === 2) {
-        var d = new Date(year, parseInt(parts[1])-1, parseInt(parts[0]));
-        if (d.getFullYear() === year) auto++;
+  EMP.forEach(function(emp) {
+    var visibleVac = 0;
+    Object.keys(tableData[emp] || {}).forEach(function(dateStr) {
+      if (tableData[emp][dateStr] === 'חופש') {
+        var parts = dateStr.split('/');
+        if (parts.length === 2) {
+          var d = new Date(year, parseInt(parts[1])-1, parseInt(parts[0]));
+          if (d.getFullYear() === year) visibleVac++;
+        }
       }
-    }
+    });
+    if (!vacData[emp]) vacData[emp] = {total:0, manual:0};
+    vacData[emp].visible = visibleVac;
   });
-  return auto + manual;
 }
 
 function renderVac() {
-  var h = '<thead><tr><th>שם החייל</th><th style="text-align:center">ימי חופש שנוצלו</th><th style="text-align:center">התאמה ידנית</th></tr></thead><tbody>';
+  syncVacFromTable();
+  var h = '<thead><tr><th>שם החייל</th><th style="text-align:center">סה"כ חופש</th><th style="text-align:center">נצפה בטבלה</th><th style="text-align:center">ימים שעברו</th><th style="text-align:center">התאמה</th></tr></thead><tbody>';
   EMP.forEach(function(e) {
-    var total = countVacDays(e);
+    var visible = (vacData[e] && vacData[e].visible) || 0;
+    var stored = (vacData[e] && vacData[e].total) || 0;
+    var manual = (vacData[e] && vacData[e].manual) || 0;
+    var total = visible + stored + manual;
+    var empEnc = encodeURIComponent(e);
     h += '<tr>';
     h += '<td style="font-weight:500">' + e + '</td>';
     h += '<td style="text-align:center"><span class="vac-count">' + total + '</span></td>';
+    h += '<td style="text-align:center;color:var(--muted)">' + visible + '</td>';
+    h += '<td style="text-align:center;color:var(--muted)">' + stored + '</td>';
     h += '<td style="text-align:center"><div class="vac-adj">';
-    h += '<button onclick="adjVac(\'' + encodeURIComponent(e) + '\',-1)">-</button>';
-    h += '<span>' + ((vacData[e] && vacData[e].manual) || 0) + '</span>';
-    h += '<button onclick="adjVac(\'' + encodeURIComponent(e) + '\',1)">+</button>';
+    h += '<button onclick="adjVac(\'' + empEnc + '\',-1)">-</button>';
+    h += '<span>' + manual + '</span>';
+    h += '<button onclick="adjVac(\'' + empEnc + '\',1)">+</button>';
     h += '</div></td>';
     h += '</tr>';
   });
@@ -281,9 +297,10 @@ function renderVac() {
 
 function adjVac(empEnc, delta) {
   var emp = decodeURIComponent(empEnc);
-  if (!vacData[emp]) vacData[emp] = {manual:0};
+  if (!vacData[emp]) vacData[emp] = {total:0, manual:0};
   vacData[emp].manual = (vacData[emp].manual || 0) + delta;
   try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
+  saveToSheets();
   renderVac();
 }
 
@@ -406,7 +423,7 @@ function saveToSheets() {
     WD.forEach(function(d) { row.push((tableData[e] && tableData[e][fmt(d)]) || ''); });
     rows.push(row);
   });
-  fetch(SHEETS_URL, { method: 'POST', body: JSON.stringify({data: rows, special: specialData}) }).catch(function(){});
+  fetch(SHEETS_URL, { method: 'POST', body: JSON.stringify({data: rows, special: specialData, vac: vacData}) }).catch(function(){});
   try { localStorage.setItem('hr_v6', JSON.stringify(tableData)); } catch(ex) {}
 }
 
@@ -453,6 +470,10 @@ function load() {
       if (result.special && Object.keys(result.special).length > 0) {
         specialData = result.special;
         try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
+      }
+      if (result.vac) {
+        vacData = result.vac;
+        try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
       }
       console.log('specialData after load:', JSON.stringify(specialData));
       render(); setSt('מוכן', '');
@@ -580,7 +601,7 @@ function copyReport() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 1);
   var dateKey = fmt(tomorrow);
-  var lines = 'דוח נוכחות - יום ' + DN[tomorrow.getDay()] + ' ' + dateKey + '\n---\n';
+  var lines = '*דוח 1 מחלקת אדום יום ' + DN[tomorrow.getDay()] + ' ' + dateKey + '*\n';
   EMP.forEach(function(e) {
     var v = (tableData[e] && tableData[e][dateKey]) || '';
     var loc = 'בסיס';
