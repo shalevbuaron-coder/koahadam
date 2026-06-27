@@ -303,7 +303,9 @@ function addEmp() {
   if (!name) return;
   if (EMP.indexOf(name) !== -1) { alert('עובד זה כבר קיים'); return; }
   EMP.push(name);
+  if (!tableData[name]) tableData[name] = {};
   saveEmpList();
+  saveToSheets();
   document.getElementById('newEmpInput').value = '';
   renderSettings();
   render();
@@ -313,7 +315,9 @@ function removeEmp(idx) {
   var name = EMP[idx];
   if (!confirm('להסיר את ' + name + '?')) return;
   EMP.splice(idx, 1);
+  delete tableData[name];
   saveEmpList();
+  saveToSheets();
   renderSettings();
   render();
 }
@@ -408,7 +412,7 @@ function saveToSheets() {
 
 function load() {
   WD = getWD();
-  try { var el = localStorage.getItem('hr_emplist'); EMP = el ? JSON.parse(el) : DEFAULT_EMP.slice(); } catch(e) { EMP = DEFAULT_EMP.slice(); }
+  EMP = DEFAULT_EMP.slice(); // יעודכן מ-Sheets אחרי הטעינה
   try { var v = localStorage.getItem('hr_vac'); if (v) vacData = JSON.parse(v); } catch(e) {}
   // specialData נטען רק מ-Sheets, לא מ-localStorage
   try {
@@ -425,11 +429,13 @@ function load() {
     .then(function(result) {
       tableData = {};
       var rows = result.data || [];
+      var empFromSheet = [];
       if (rows.length > 1) {
         var headers = rows[0];
         for (var i = 1; i < rows.length; i++) {
           var empName = rows[i][0];
           if (!empName) continue;
+          empFromSheet.push(empName);
           tableData[empName] = {};
           for (var j = 1; j < headers.length; j++) {
             var hdr = headers[j];
@@ -442,6 +448,7 @@ function load() {
           }
         }
       }
+      if (empFromSheet.length > 0) { EMP = empFromSheet; saveEmpList(); }
       console.log('special from sheets:', JSON.stringify(result.special));
       if (result.special && Object.keys(result.special).length > 0) {
         specialData = result.special;
@@ -527,8 +534,25 @@ function sendMsg() {
       if (changes.length > 0) {
         changes.forEach(function(a) {
           var emp = null;
+          // 1. התאמה מדויקת
           for (var i = 0; i < EMP.length; i++) {
-            if (EMP[i]===a.employee || EMP[i].indexOf(a.employee)!==-1 || a.employee.indexOf(EMP[i].split(' ')[0])!==-1) { emp=EMP[i]; break; }
+            if (EMP[i] === a.employee) { emp = EMP[i]; break; }
+          }
+          // 2. התאמה חלקית — שם מלא מכיל את מה שקיבלנו
+          if (!emp) {
+            for (var i = 0; i < EMP.length; i++) {
+              if (EMP[i].indexOf(a.employee) !== -1) { emp = EMP[i]; break; }
+            }
+          }
+          // 3. התאמה לפי שם משפחה בלבד (לא שם פרטי בלבד!)
+          if (!emp) {
+            var parts = a.employee.split(' ');
+            var lastName = parts.length > 1 ? parts[parts.length-1] : null;
+            if (lastName) {
+              for (var i = 0; i < EMP.length; i++) {
+                if (EMP[i].indexOf(lastName) !== -1) { emp = EMP[i]; break; }
+              }
+            }
           }
           if (emp) {
             if (!tableData[emp]) tableData[emp] = {};
