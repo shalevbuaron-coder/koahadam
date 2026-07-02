@@ -447,11 +447,14 @@ function load() {
       tableData = {};
       var rows = result.data || [];
       var empFromSheet = [];
+      var empSeen = {};
       if (rows.length > 1) {
         var headers = rows[0];
         for (var i = 1; i < rows.length; i++) {
           var empName = rows[i][0];
-          if (!empName) continue;
+          if (!empName || empName === '__special__' || empName === '__vac__') continue;
+          if (empSeen[empName]) continue;
+          empSeen[empName] = true;
           empFromSheet.push(empName);
           tableData[empName] = {};
           for (var j = 1; j < headers.length; j++) {
