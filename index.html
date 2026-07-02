@@ -71,38 +71,29 @@ tr:hover td{background:#ffffff06;}
 .modal h3{font-size:14px;font-weight:500;margin-bottom:12px;color:var(--muted);}
 .modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;resize:none;margin-bottom:12px;}
 .modal textarea:focus{border-color:var(--accent);}
-.modal input[type=text]{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;margin-bottom:12px;}
-.modal input[type=text]:focus{border-color:var(--accent);}
 .modal-btns{display:flex;gap:8px;}
 .mbtn{border:none;border-radius:8px;padding:8px 16px;font-family:"Rubik",sans-serif;font-size:13px;cursor:pointer;}
 .mbtn-s{background:var(--accent);color:#fff;}
 .mbtn-c{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
 .mbtn-d{background:#ff767518;color:var(--red);border:1px solid #ff767533;}
-/* Settings */
 .emp-list{padding:0 18px 12px;}
 .emp-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
 .emp-row:last-child{border-bottom:none;}
 .emp-name{font-size:13px;font-weight:500;}
-.emp-actions{display:flex;gap:6px;align-items:center;}
 .btn-del{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--red);font-size:12px;cursor:pointer;}
 .btn-del:hover{background:#ff767518;}
 .add-emp-row{display:flex;gap:10px;padding:14px 18px;border-top:1px solid var(--border);}
 .add-emp-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;}
 .add-emp-row input:focus{border-color:var(--accent);}
 .btn-add{background:var(--accent);border:none;border-radius:10px;padding:9px 18px;color:#fff;font-family:"Rubik",sans-serif;font-size:13px;font-weight:500;cursor:pointer;}
-/* Vacation tracker */
 .vac-table{width:100%;border-collapse:collapse;font-size:13px;}
 .vac-table th{padding:10px 16px;background:var(--surface2);color:var(--muted);font-weight:400;text-align:right;border-bottom:1px solid var(--border);}
 .vac-table td{padding:10px 16px;border-bottom:1px solid var(--border);}
 .vac-table tr:last-child td{border-bottom:none;}
 .vac-table tr:hover td{background:#ffffff06;}
 .vac-count{font-size:18px;font-weight:600;color:var(--accent2);}
-.vac-bar-wrap{height:6px;background:var(--surface2);border-radius:3px;width:100px;display:inline-block;vertical-align:middle;}
-.vac-bar{height:6px;background:var(--accent);border-radius:3px;}
-.vac-adj{display:flex;align-items:center;gap:6px;}
-.vac-adj button{background:var(--surface2);border:1px solid var(--border);border-radius:6px;width:26px;height:26px;color:var(--text);font-size:14px;cursor:pointer;line-height:1;}
-.vac-adj button:hover{border-color:var(--accent);}
-.vac-adj span{font-size:13px;min-width:24px;text-align:center;}
+.vac-input{width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:14px;color:var(--text);font-family:"Rubik",sans-serif;text-align:center;outline:none;}
+.vac-input:focus{border-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -111,14 +102,11 @@ tr:hover td{background:#ffffff06;}
     <h1>ניהול נוכחות</h1>
     <p>כתוב הודעה — המערכת תעדכן את הטבלה אוטומטית</p>
   </div>
-
   <div class="tabs">
     <div class="tab active" id="tab-main" onclick="switchTab('main')">נוכחות</div>
     <div class="tab" id="tab-vac" onclick="switchTab('vac')">חופשות</div>
     <div class="tab" id="tab-settings" onclick="switchTab('settings')">הגדרות</div>
   </div>
-
-  <!-- MAIN TAB -->
   <div class="pane active" id="pane-main">
     <div class="setup-box">
       <label>מפתח Anthropic API</label>
@@ -126,7 +114,7 @@ tr:hover td{background:#ffffff06;}
         <input type="password" id="apiKey" placeholder="sk-ant-..." />
         <button class="btn-save" onclick="saveKey()">שמור</button>
       </div>
-      <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a></div>
+      <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח כאן</a></div>
     </div>
     <div class="input-area">
       <label>הודעה חדשה</label>
@@ -155,17 +143,13 @@ tr:hover td{background:#ffffff06;}
       </div>
     </div>
   </div>
-
-  <!-- VACATION TAB -->
   <div class="pane" id="pane-vac">
     <div class="card">
-      <div class="card-head"><span>מעקב ימי חופשה — 2026</span></div>
+      <div class="card-head"><span>מעקב ימי חופשה</span></div>
       <div class="scroll"><table class="vac-table" id="vacTbl"></table></div>
     </div>
-    <p style="font-size:12px;color:var(--muted);text-align:center;">ספירה אוטומטית מהטבלה + התאמה ידנית לימים שלא מופיעים בשבועיים הקרובים</p>
+    <p style="font-size:12px;color:var(--muted);text-align:center;">הזן את מספר ימי החופש שנותרו לכל חייל. המערכת תוריד אוטומטית בסוף כל יום חופש.</p>
   </div>
-
-  <!-- SETTINGS TAB -->
   <div class="pane" id="pane-settings">
     <div class="card">
       <div class="card-head"><span>ניהול עובדים</span></div>
@@ -177,8 +161,6 @@ tr:hover td{background:#ffffff06;}
     </div>
   </div>
 </div>
-
-<!-- Modal -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
@@ -190,11 +172,10 @@ tr:hover td{background:#ffffff06;}
     </div>
   </div>
 </div>
-
 <script>
 var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec';
 var PROXY_URL = 'https://hr-proxy.shalevbuaron.workers.dev';
-var DEFAULT_EMP = ["איתן ליבשין", "איתן רוזנטל", "אורי דויטש", "בר ורוטנקר", "מור ריבק", "רוני קוטליארנקו", "שחר שטייר", "גיא אליאס", "אדר ביטון", "איתי בנס"];
+var DEFAULT_EMP = ["איתן ליבשין", "איתן רוזנטל", "אורי דויטש", "בר ורוטנקר", "גיא אליאס", "מור ריבק", "רוני קוטליארנקו", "שחר שטייר", "אדר ביטון", "איתי בנס"];
 var DN = {0:'ראשון',1:'שני',2:'שלישי',3:'רביעי',4:'חמישי'};
 var WD = [];
 var tableData = {};
@@ -217,6 +198,10 @@ function getWD() {
 
 function fmt(d) {
   return String(d.getDate()).padStart(2,'0') + '/' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function sortEMP() {
+  EMP.sort(function(a,b) { return a.localeCompare(b, 'he'); });
 }
 
 function setSt(msg, cls) {
@@ -243,73 +228,62 @@ function saveKey() {
   setSt('מפתח נשמר','ok');
 }
 
-// Count vacation days used this year from tableData
-function countVacDays(emp) {
-  // Total = stored cumulative + current visible in table
-  var stored = (vacData[emp] && vacData[emp].total) || 0;
-  var manual = (vacData[emp] && vacData[emp].manual) || 0;
-  return stored + manual;
-}
-
-function syncVacFromTable() {
-  // Add vacation days visible in current table to stored totals
-  var year = new Date().getFullYear();
+// Check yesterday's vacation days and deduct from quota
+function processYesterdayVacation() {
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  var yw = yesterday.getDay();
+  if (yw === 5 || yw === 6) return; // skip weekend
+  var yKey = fmt(yesterday);
+  var lastProcessed = localStorage.getItem('hr_last_processed') || '';
+  if (lastProcessed === yKey) return; // already processed today
+  var changed = false;
   EMP.forEach(function(emp) {
-    var visibleVac = 0;
-    Object.keys(tableData[emp] || {}).forEach(function(dateStr) {
-      if (tableData[emp][dateStr] === 'חופש') {
-        var parts = dateStr.split('/');
-        if (parts.length === 2) {
-          var d = new Date(year, parseInt(parts[1])-1, parseInt(parts[0]));
-          if (d.getFullYear() === year) visibleVac++;
-        }
-      }
-    });
-    if (!vacData[emp]) vacData[emp] = {total:0, manual:0};
-    vacData[emp].visible = visibleVac;
+    if (tableData[emp] && tableData[emp][yKey] === 'חופש') {
+      if (!vacData[emp]) vacData[emp] = {quota:0};
+      vacData[emp].quota = (vacData[emp].quota || 0) - 1;
+      changed = true;
+    }
   });
+  if (changed) {
+    localStorage.setItem('hr_last_processed', yKey);
+    saveToSheets();
+  }
 }
 
 function renderVac() {
-  syncVacFromTable();
-  var h = '<thead><tr><th>שם החייל</th><th style="text-align:center">סה"כ חופש</th><th style="text-align:center">נצפה בטבלה</th><th style="text-align:center">ימים שעברו</th><th style="text-align:center">התאמה</th></tr></thead><tbody>';
-  EMP.forEach(function(e) {
-    var visible = (vacData[e] && vacData[e].visible) || 0;
-    var stored = (vacData[e] && vacData[e].total) || 0;
-    var manual = (vacData[e] && vacData[e].manual) || 0;
-    var total = visible + stored + manual;
+  var h = '<thead><tr><th>שם החייל</th><th style="text-align:center">ימי חופש שנותרו</th></tr></thead><tbody>';
+  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
+  sorted.forEach(function(e) {
+    var quota = (vacData[e] && vacData[e].quota !== undefined) ? vacData[e].quota : '';
     var empEnc = encodeURIComponent(e);
     h += '<tr>';
     h += '<td style="font-weight:500">' + e + '</td>';
-    h += '<td style="text-align:center"><span class="vac-count">' + total + '</span></td>';
-    h += '<td style="text-align:center;color:var(--muted)">' + visible + '</td>';
-    h += '<td style="text-align:center;color:var(--muted)">' + stored + '</td>';
-    h += '<td style="text-align:center"><div class="vac-adj">';
-    h += '<button onclick="adjVac(\'' + empEnc + '\',-1)">-</button>';
-    h += '<span>' + manual + '</span>';
-    h += '<button onclick="adjVac(\'' + empEnc + '\',1)">+</button>';
-    h += '</div></td>';
+    h += '<td style="text-align:center">';
+    h += '<input class="vac-input" type="number" value="' + quota + '" onchange="setVacQuota(\'' + empEnc + '\',this.value)" />';
+    h += '</td>';
     h += '</tr>';
   });
   h += '</tbody>';
   document.getElementById('vacTbl').innerHTML = h;
 }
 
-function adjVac(empEnc, delta) {
+function setVacQuota(empEnc, val) {
   var emp = decodeURIComponent(empEnc);
-  if (!vacData[emp]) vacData[emp] = {total:0, manual:0};
-  vacData[emp].manual = (vacData[emp].manual || 0) + delta;
+  if (!vacData[emp]) vacData[emp] = {};
+  vacData[emp].quota = parseInt(val) || 0;
   try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
   saveToSheets();
-  renderVac();
 }
 
 function renderSettings() {
+  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
   var h = '';
-  EMP.forEach(function(e, i) {
+  sorted.forEach(function(e) {
+    var idx = EMP.indexOf(e);
     h += '<div class="emp-row">';
     h += '<span class="emp-name">' + e + '</span>';
-    h += '<div class="emp-actions"><button class="btn-del" onclick="removeEmp(' + i + ')">הסר</button></div>';
+    h += '<button class="btn-del" onclick="removeEmp(' + idx + ')">הסר</button>';
     h += '</div>';
   });
   document.getElementById('empList').innerHTML = h;
@@ -320,6 +294,7 @@ function addEmp() {
   if (!name) return;
   if (EMP.indexOf(name) !== -1) { alert('עובד זה כבר קיים'); return; }
   EMP.push(name);
+  sortEMP();
   if (!tableData[name]) tableData[name] = {};
   saveEmpList();
   saveToSheets();
@@ -364,13 +339,14 @@ function handleBadgeClick(el) {
 }
 
 function render() {
+  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
   var h = '<thead><tr><th class="nc">שם החייל</th>';
   for (var i = 0; i < WD.length; i++) {
     h += '<th>' + DN[WD[i].getDay()] + '<br><span style="font-size:10px;opacity:.5">' + fmt(WD[i]) + '</span></th>';
   }
   h += '</tr></thead><tbody>';
-  for (var ei = 0; ei < EMP.length; ei++) {
-    var e = EMP[ei];
+  for (var ei = 0; ei < sorted.length; ei++) {
+    var e = sorted[ei];
     h += '<tr><td class="nm">' + e + '</td>';
     for (var di = 0; di < WD.length; di++) {
       var dateKey = fmt(WD[di]);
@@ -416,9 +392,10 @@ function deleteSpecial() {
 }
 
 function saveToSheets() {
-  var headers = ['שם'].concat(WD.map(function(d) { return fmt(d); }));
+  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
+  var headers = ['\u05e9\u05dd'].concat(WD.map(function(d) { return fmt(d); }));
   var rows = [headers];
-  EMP.forEach(function(e) {
+  sorted.forEach(function(e) {
     var row = [e];
     WD.forEach(function(d) { row.push((tableData[e] && tableData[e][fmt(d)]) || ''); });
     rows.push(row);
@@ -429,18 +406,17 @@ function saveToSheets() {
 
 function load() {
   WD = getWD();
-  EMP = DEFAULT_EMP.slice(); // יעודכן מ-Sheets אחרי הטעינה
+  EMP = DEFAULT_EMP.slice();
   try { var v = localStorage.getItem('hr_vac'); if (v) vacData = JSON.parse(v); } catch(e) {}
-  // specialData נטען רק מ-Sheets, לא מ-localStorage
   try {
     var k = localStorage.getItem('hr_apikey');
     if (k) {
       document.getElementById('apiKey').value = k;
-      document.getElementById('apiStatus').textContent = 'מפתח שמור';
+      document.getElementById('apiStatus').textContent = '\u05de\u05e4\u05ea\u05d7 \u05e9\u05de\u05d5\u05e8';
       document.getElementById('apiStatus').className = 'api-status ok';
     }
   } catch(e) {}
-  setSt('טוען נתונים מהענן...', 'loading');
+  setSt('\u05d8\u05d5\u05e2\u05df \u05e0\u05ea\u05d5\u05e0\u05d9\u05dd...', 'loading');
   fetch(SHEETS_URL)
     .then(function(r) { return r.json(); })
     .then(function(result) {
@@ -468,8 +444,10 @@ function load() {
           }
         }
       }
-      if (empFromSheet.length > 0) { EMP = empFromSheet; saveEmpList(); }
-      console.log('special from sheets:', JSON.stringify(result.special));
+      if (empFromSheet.length > 0) {
+        EMP = empFromSheet;
+        saveEmpList();
+      }
       if (result.special && Object.keys(result.special).length > 0) {
         specialData = result.special;
         try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
@@ -478,10 +456,11 @@ function load() {
         vacData = result.vac;
         try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
       }
-      console.log('specialData after load:', JSON.stringify(specialData));
-      render(); setSt('מוכן', '');
+      processYesterdayVacation();
+      render();
+      setSt('\u05de\u05d5\u05db\u05df', '');
     })
-    .catch(function() { render(); setSt('מוכן', ''); });
+    .catch(function() { render(); setSt('\u05de\u05d5\u05db\u05df', ''); });
 }
 
 function buildSystemPrompt() {
@@ -496,38 +475,38 @@ function buildSystemPrompt() {
     });
     if (entries.length) stateLines.push(e + ': ' + entries.join(', '));
   });
-  var state = stateLines.length ? stateLines.join(' | ') : 'אין היעדרויות';
+  var state = stateLines.length ? stateLines.join(' | ') : '\u05d0\u05d9\u05df \u05d4\u05d9\u05e2\u05d3\u05e8\u05d5\u05d9\u05d5\u05ea';
   return [
-    'אתה עוזר HR לניהול נוכחות חיילים. ענה תמיד בעברית.',
-    'עובדים: ' + EMP.join(', '),
-    'ימי עבודה (ראשון-חמישי): ' + dates,
-    'היום: ' + today,
-    'מצב נוכחי: ' + state,
+    '\u05d0\u05ea\u05d4 \u05e2\u05d5\u05d6\u05e8 HR \u05dc\u05e0\u05d9\u05d4\u05d5\u05dc \u05e0\u05d5\u05db\u05d7\u05d5\u05ea \u05d7\u05d9\u05d9\u05dc\u05d9\u05dd. \u05e2\u05e0\u05d4 \u05ea\u05de\u05d9\u05d3 \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea.',
+    '\u05e2\u05d5\u05d1\u05d3\u05d9\u05dd: ' + EMP.join(', '),
+    '\u05d9\u05de\u05d9 \u05e2\u05d1\u05d5\u05d3\u05d4 (\u05e8\u05d0\u05e9\u05d5\u05df-\u05d7\u05de\u05d9\u05e9\u05d9): ' + dates,
+    '\u05d4\u05d9\u05d5\u05dd: ' + today,
+    '\u05de\u05e6\u05d1 \u05e0\u05d5\u05db\u05d7\u05d9: ' + state,
     '',
-    'חוקים:',
-    '1. ימי מחלה נספרים כימים קלנדריים רצופים כולל שישי ושבת. שישי/שבת לא מופיעים בטבלה.',
-    '   דוגמה: שבוע מראשון 07/06 = 07-13/06, בטבלה: 07,08,09,10,11/06.',
-    '2. אם לא צוין יום התחלה, התחל מהיום הבא.',
-    '3. סוגי היעדרות: הפנייה, חופש, גימל, לא מגיע, אפטר, מיוחד',
-    '4. אפטר = יוצא באותו יום וחוזר למחרת.',
-    '5. מיוחד = אירוע מיוחד, פרטים יוזנו ידנית.',
-    '6. ביטול כללי = action:remove_all',
-    '7. ביטול ספציפי = action:remove עם תאריך',
-    '8. הוספה = action:add',
+    '\u05d7\u05d5\u05e7\u05d9\u05dd:',
+    '1. \u05d9\u05de\u05d9 \u05de\u05d7\u05dc\u05d4 \u05e0\u05e1\u05e4\u05e8\u05d9\u05dd \u05db\u05d9\u05de\u05d9\u05dd \u05e7\u05dc\u05e0\u05d3\u05e8\u05d9\u05d9\u05dd \u05e8\u05e6\u05d5\u05e4\u05d9\u05dd \u05db\u05d5\u05dc\u05dc \u05e9\u05d9\u05e9\u05d9 \u05d5\u05e9\u05d1\u05ea. \u05e9\u05d9\u05e9\u05d9/\u05e9\u05d1\u05ea \u05dc\u05d0 \u05de\u05d5\u05e4\u05d9\u05e2\u05d9\u05dd \u05d1\u05d8\u05d1\u05dc\u05d4.',
+    '   \u05d3\u05d5\u05d2\u05de\u05d4: \u05e9\u05d1\u05d5\u05e2 \u05de\u05e8\u05d0\u05e9\u05d5\u05df 07/06 = 07-13/06, \u05d1\u05d8\u05d1\u05dc\u05d4: 07,08,09,10,11/06.',
+    '2. \u05d0\u05dd \u05dc\u05d0 \u05e6\u05d5\u05d9\u05df \u05d9\u05d5\u05dd \u05d4\u05ea\u05d7\u05dc\u05d4, \u05d4\u05ea\u05d7\u05dc \u05de\u05d4\u05d9\u05d5\u05dd \u05d4\u05d1\u05d0.',
+    '3. \u05e1\u05d5\u05d2\u05d9 \u05d4\u05d9\u05e2\u05d3\u05e8\u05d5\u05ea: \u05d4\u05e4\u05e0\u05d9\u05d9\u05d4, \u05d7\u05d5\u05e4\u05e9, \u05d2\u05d9\u05de\u05dc, \u05dc\u05d0 \u05de\u05d2\u05d9\u05e2, \u05d0\u05e4\u05d8\u05e8, \u05de\u05d9\u05d5\u05d7\u05d3',
+    '4. \u05d0\u05e4\u05d8\u05e8 = \u05d9\u05d5\u05e6\u05d0 \u05d1\u05d0\u05d5\u05ea\u05d5 \u05d9\u05d5\u05dd \u05d5\u05d7\u05d5\u05d6\u05e8 \u05dc\u05de\u05d7\u05e8\u05ea.',
+    '5. \u05de\u05d9\u05d5\u05d7\u05d3 = \u05d0\u05d9\u05e8\u05d5\u05e2 \u05de\u05d9\u05d5\u05d7\u05d3, \u05e4\u05e8\u05d8\u05d9\u05dd \u05d9\u05d5\u05d6\u05e0\u05d5 \u05d9\u05d3\u05e0\u05d9\u05ea.',
+    '6. \u05d1\u05d9\u05d8\u05d5\u05dc \u05db\u05dc\u05dc\u05d9 = action:remove_all',
+    '7. \u05d1\u05d9\u05d8\u05d5\u05dc \u05e1\u05e4\u05e6\u05d9\u05e4\u05d9 = action:remove \u05e2\u05dd \u05ea\u05d0\u05e8\u05d9\u05da',
+    '8. \u05d4\u05d5\u05e1\u05e4\u05d4 = action:add',
     '',
-    'חשוב: ענה אך ורק ב-JSON תקני ללא טקסט נוסף.',
-    'כשמבין: {"changes":[{"employee":"שם","date":"DD/MM","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור","needs_clarification":false}',
-    'כשצריך הבהרה: {"changes":[],"summary":"","needs_clarification":true,"question":"שאלה"}'
+    '\u05d7\u05e9\u05d5\u05d1: \u05e2\u05e0\u05d4 \u05d0\u05da \u05d5\u05e8\u05e7 \u05d1-JSON \u05ea\u05e7\u05e0\u05d9 \u05dc\u05dc\u05d0 \u05d8\u05e7\u05e1\u05d8 \u05e0\u05d5\u05e1\u05e3.',
+    '\u05db\u05e9\u05de\u05d1\u05d9\u05df: {"changes":[{"employee":"\u05e9\u05dd","date":"DD/MM","reason":"\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4|\u05d7\u05d5\u05e4\u05e9|\u05d2\u05d9\u05de\u05dc|\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2|\u05d0\u05e4\u05d8\u05e8|\u05de\u05d9\u05d5\u05d7\u05d3","action":"add|remove|remove_all"}],"summary":"\u05ea\u05d9\u05d0\u05d5\u05e8","needs_clarification":false}',
+    '\u05db\u05e9\u05e6\u05e8\u05d9\u05da \u05d4\u05d1\u05d4\u05e8\u05d4: {"changes":[],"summary":"","needs_clarification":true,"question":"\u05e9\u05d0\u05dc\u05d4"}'
   ].join('\n');
 }
 
 function sendMsg() {
   var msg = document.getElementById('msg').value.trim();
-  if (!msg) { setSt('אנא כתוב הודעה','err'); return; }
+  if (!msg) { setSt('\u05d0\u05e0\u05d0 \u05db\u05ea\u05d5\u05d1 \u05d4\u05d5\u05d3\u05e2\u05d4','err'); return; }
   var key = localStorage.getItem('hr_apikey') || '';
-  if (!key) { setSt('אנא הכנס מפתח API','err'); return; }
+  if (!key) { setSt('\u05d0\u05e0\u05d0 \u05d4\u05db\u05e0\u05e1 \u05de\u05e4\u05ea\u05d7 API','err'); return; }
   document.getElementById('sendBtn').disabled = true;
-  setSt('מנתח הודעה...','loading');
+  setSt('\u05de\u05e0\u05ea\u05d7 \u05d4\u05d5\u05d3\u05e2\u05d4...','loading');
   chatHistory.push({role:'user', content: msg});
   fetch(PROXY_URL, {
     method: 'POST',
@@ -535,11 +514,11 @@ function sendMsg() {
     body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:buildSystemPrompt(),messages:chatHistory})
   })
   .then(function(r) {
-    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||'שגיאת שרת '+r.status); });
+    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||'\u05e9\u05d2\u05d9\u05d0\u05ea \u05e9\u05e8\u05ea '+r.status); });
     return r.json();
   })
   .then(function(result) {
-    if (!result || !result.content) throw new Error((result&&result.error&&result.error.message)||'תשובה ריקה');
+    if (!result || !result.content) throw new Error('\u05ea\u05e9\u05d5\u05d1\u05d4 \u05e8\u05d9\u05e7\u05d4');
     var text = result.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
     chatHistory.push({role:'assistant', content: text});
     var parsed;
@@ -548,7 +527,7 @@ function sendMsg() {
       parsed = JSON.parse(clean);
     } catch(e1) {
       try { parsed = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}')+1)); }
-      catch(e2) { throw new Error('תשובה לא תקינה'); }
+      catch(e2) { throw new Error('\u05ea\u05e9\u05d5\u05d1\u05d4 \u05dc\u05d0 \u05ea\u05e7\u05d9\u05e0\u05d4'); }
     }
     if (parsed.needs_clarification) {
       setSt('? ' + parsed.question, '');
@@ -558,17 +537,14 @@ function sendMsg() {
       if (changes.length > 0) {
         changes.forEach(function(a) {
           var emp = null;
-          // 1. התאמה מדויקת
           for (var i = 0; i < EMP.length; i++) {
             if (EMP[i] === a.employee) { emp = EMP[i]; break; }
           }
-          // 2. התאמה חלקית — שם מלא מכיל את מה שקיבלנו
           if (!emp) {
             for (var i = 0; i < EMP.length; i++) {
               if (EMP[i].indexOf(a.employee) !== -1) { emp = EMP[i]; break; }
             }
           }
-          // 3. התאמה לפי שם משפחה בלבד (לא שם פרטי בלבד!)
           if (!emp) {
             var parts = a.employee.split(' ');
             var lastName = parts.length > 1 ? parts[parts.length-1] : null;
@@ -582,20 +558,20 @@ function sendMsg() {
             if (!tableData[emp]) tableData[emp] = {};
             if (a.action === 'remove_all') { WD.forEach(function(d){ tableData[emp][fmt(d)] = ''; }); }
             else if (a.action === 'remove' && a.date) { tableData[emp][a.date] = ''; }
-            else if (a.action === 'add' && a.date) { tableData[emp][a.date] = a.reason || 'לא מגיע'; }
+            else if (a.action === 'add' && a.date) { tableData[emp][a.date] = a.reason || '\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2'; }
           }
         });
         saveToSheets(); render();
         setSt('\u2713 ' + parsed.summary, 'ok');
         chatHistory = [];
       } else {
-        setSt('\u26a0 ' + (parsed.summary || 'לא הבנתי'), 'err');
+        setSt('\u26a0 ' + (parsed.summary || '\u05dc\u05d0 \u05d4\u05d1\u05e0\u05ea\u05d9'), 'err');
         chatHistory = [];
       }
       document.getElementById('msg').value = '';
     }
   })
-  .catch(function(e) { setSt('שגיאה: ' + e.message, 'err'); chatHistory = []; })
+  .catch(function(e) { setSt('\u05e9\u05d2\u05d9\u05d0\u05d4: ' + e.message, 'err'); chatHistory = []; })
   .finally(function() { document.getElementById('sendBtn').disabled = false; });
 }
 
@@ -604,33 +580,35 @@ function copyReport() {
   tomorrow.setDate(tomorrow.getDate() + 1);
   while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 1);
   var dateKey = fmt(tomorrow);
-  var lines = '*דוח 1 מחלקת אדום יום ' + DN[tomorrow.getDay()] + ' ' + dateKey + '*\n';
-  EMP.forEach(function(e) {
+  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
+  var lines = '*\u05d3\u05d5\u05d7 1 \u05de\u05d7\u05dc\u05e7\u05ea \u05d0\u05d3\u05d5\u05dd \u05d9\u05d5\u05dd ' + DN[tomorrow.getDay()] + ' ' + dateKey + '*\n';
+  sorted.forEach(function(e) {
     var v = (tableData[e] && tableData[e][dateKey]) || '';
-    var loc = 'בסיס';
-    if (v==='גימל') loc='גימלים';
-    else if (v==='הפנייה') loc='הפנייה';
-    else if (v==='חופש') loc='חופשה שנתית';
-    else if (v==='לא מגיע') loc='לא מגיע';
-    else if (v==='אפטר') loc='אפטר';
-    else if (v==='מיוחד') loc=(specialData[e]&&specialData[e][dateKey])||'אירוע מיוחד';
+    var loc = '\u05d1\u05e1\u05d9\u05e1';
+    if (v==='\u05d2\u05d9\u05de\u05dc') loc='\u05d2\u05d9\u05de\u05dc\u05d9\u05dd';
+    else if (v==='\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4') loc='\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4';
+    else if (v==='\u05d7\u05d5\u05e4\u05e9') loc='\u05d7\u05d5\u05e4\u05e9\u05d4 \u05e9\u05e0\u05ea\u05d9\u05ea';
+    else if (v==='\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2') loc='\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2';
+    else if (v==='\u05d0\u05e4\u05d8\u05e8') loc='\u05d0\u05e4\u05d8\u05e8';
+    else if (v==='\u05de\u05d9\u05d5\u05d7\u05d3') loc=(specialData[e]&&specialData[e][dateKey])||'\u05d0\u05d9\u05e8\u05d5\u05e2 \u05de\u05d9\u05d5\u05d7\u05d3';
     lines += e + ' - ' + loc + '\n';
   });
   navigator.clipboard.writeText(lines).then(function() {
     var b = document.querySelectorAll('.btn-sm')[0];
-    var o = b.textContent; b.textContent = 'הועתק!';
+    var o = b.textContent; b.textContent = '\u05d4\u05d5\u05e2\u05ea\u05e7!';
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
 
 function copyExcel() {
-  var t = 'שם החייל\t' + WD.map(function(d){ return DN[d.getDay()]+' '+fmt(d); }).join('\t') + '\n';
-  EMP.forEach(function(e) {
+  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
+  var t = '\u05e9\u05dd \u05d4\u05d7\u05d9\u05d9\u05dc\t' + WD.map(function(d){ return DN[d.getDay()]+' '+fmt(d); }).join('\t') + '\n';
+  sorted.forEach(function(e) {
     t += e + '\t' + WD.map(function(d){ return (tableData[e]&&tableData[e][fmt(d)])||''; }).join('\t') + '\n';
   });
   navigator.clipboard.writeText(t).then(function() {
     var b = document.querySelectorAll('.btn-sm')[1];
-    var o = b.textContent; b.textContent = 'הועתק!';
+    var o = b.textContent; b.textContent = '\u05d4\u05d5\u05e2\u05ea\u05e7!';
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
