@@ -280,10 +280,10 @@ function renderSettings() {
   var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
   var h = '';
   sorted.forEach(function(e) {
-    var idx = EMP.indexOf(e);
+    var empEnc = encodeURIComponent(e);
     h += '<div class="emp-row">';
     h += '<span class="emp-name">' + e + '</span>';
-    h += '<button class="btn-del" onclick="removeEmp(' + idx + ')">הסר</button>';
+    h += '<button class="btn-del" onclick="removeEmp(\'' + empEnc + '\')">הסר</button>';
     h += '</div>';
   });
   document.getElementById('empList').innerHTML = h;
@@ -303,9 +303,11 @@ function addEmp() {
   render();
 }
 
-function removeEmp(idx) {
-  var name = EMP[idx];
+function removeEmp(empEnc) {
+  var name = decodeURIComponent(empEnc);
   if (!confirm('להסיר את ' + name + '?')) return;
+  var idx = EMP.indexOf(name);
+  if (idx === -1) return;
   EMP.splice(idx, 1);
   delete tableData[name];
   saveEmpList();
