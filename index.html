@@ -52,7 +52,8 @@ table{width:100%;border-collapse:collapse;font-size:12px;}
 th{padding:9px 10px;background:var(--surface2);color:var(--muted);font-weight:400;white-space:nowrap;text-align:center;border-bottom:1px solid var(--border);}
 th.nc{text-align:right;min-width:120px;}
 td{padding:8px 10px;border-bottom:1px solid var(--border);text-align:center;}
-td.nm{text-align:right;color:var(--text);font-weight:500;white-space:nowrap;}
+td.nm{text-align:right;color:var(--text);font-weight:500;white-space:nowrap;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;}
+td.nm:hover{color:var(--accent2);}
 tr:last-child td{border-bottom:none;}
 tr:hover td{background:#ffffff06;}
 .badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;}
@@ -65,9 +66,9 @@ tr:hover td{background:#ffffff06;}
 .bm:hover{background:#a29bfe33;}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--border);display:inline-block;cursor:pointer;}
 .legend{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--border);}
-.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;align-items:center;justify-content:center;}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#00000088;z-index:100;align-items:center;justify-content:center;padding:20px;}
 .overlay.open{display:flex;}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:90%;max-width:400px;direction:rtl;}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;width:100%;max-width:400px;direction:rtl;max-height:85vh;overflow-y:auto;}
 .modal h3{font-size:14px;font-weight:500;margin-bottom:12px;color:var(--muted);}
 .modal textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;resize:none;margin-bottom:12px;}
 .modal textarea:focus{border-color:var(--accent);}
@@ -86,14 +87,27 @@ tr:hover td{background:#ffffff06;}
 .add-emp-row input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:9px 14px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;}
 .add-emp-row input:focus{border-color:var(--accent);}
 .btn-add{background:var(--accent);border:none;border-radius:10px;padding:9px 18px;color:#fff;font-family:"Rubik",sans-serif;font-size:13px;font-weight:500;cursor:pointer;}
-.vac-table{width:100%;border-collapse:collapse;font-size:13px;}
-.vac-table th{padding:10px 16px;background:var(--surface2);color:var(--muted);font-weight:400;text-align:right;border-bottom:1px solid var(--border);}
-.vac-table td{padding:10px 16px;border-bottom:1px solid var(--border);}
-.vac-table tr:last-child td{border-bottom:none;}
-.vac-table tr:hover td{background:#ffffff06;}
-.vac-count{font-size:18px;font-weight:600;color:var(--accent2);}
-.vac-input{width:60px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:14px;color:var(--text);font-family:"Rubik",sans-serif;text-align:center;outline:none;}
-.vac-input:focus{border-color:var(--accent);}
+/* Profile modal */
+.profile-modal{max-width:460px;}
+.profile-sec{margin-bottom:16px;}
+.profile-sec-title{font-size:12px;color:var(--accent2);font-weight:600;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+.profile-field{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.profile-field label{font-size:12px;color:var(--muted);width:120px;flex-shrink:0;}
+.profile-field input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;}
+.profile-field input:focus{border-color:var(--accent);}
+.profile-field .del-field{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:2px 6px;}
+.profile-field .del-field:hover{color:var(--red);}
+/* Field manager */
+.fm-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.fm-row:last-child{border-bottom:none;}
+.fm-row .fm-label{flex:1;font-weight:500;}
+.fm-row .fm-meta{color:var(--muted);font-size:11px;}
+.fm-add{display:flex;flex-direction:column;gap:8px;padding-top:12px;margin-top:8px;border-top:1px solid var(--border);}
+.fm-add input,.fm-add select{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--text);font-family:"Rubik",sans-serif;outline:none;}
+.fm-add input:focus,.fm-add select:focus{border-color:var(--accent);}
+.fm-add-row{display:flex;gap:8px;}
+.fm-add-row select{flex:1;}
+.fm-add-row input{flex:2;}
 </style>
 </head>
 <body>
@@ -104,7 +118,6 @@ tr:hover td{background:#ffffff06;}
   </div>
   <div class="tabs">
     <div class="tab active" id="tab-main" onclick="switchTab('main')">נוכחות</div>
-    <div class="tab" id="tab-vac" onclick="switchTab('vac')">חופשות</div>
     <div class="tab" id="tab-settings" onclick="switchTab('settings')">הגדרות</div>
   </div>
   <div class="pane active" id="pane-main">
@@ -114,7 +127,7 @@ tr:hover td{background:#ffffff06;}
         <input type="password" id="apiKey" placeholder="sk-ant-..." />
         <button class="btn-save" onclick="saveKey()">שמור</button>
       </div>
-      <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח כאן</a></div>
+      <div class="api-status" id="apiStatus">לא הוזן מפתח &mdash; <a href="https://console.anthropic.com" target="_blank" style="color:var(--accent2)">קבל מפתח חינמי כאן</a></div>
     </div>
     <div class="input-area">
       <label>הודעה חדשה</label>
@@ -142,13 +155,7 @@ tr:hover td{background:#ffffff06;}
         <span class="badge bm">מיוחד ✎</span>
       </div>
     </div>
-  </div>
-  <div class="pane" id="pane-vac">
-    <div class="card">
-      <div class="card-head"><span>מעקב ימי חופשה</span></div>
-      <div class="scroll"><table class="vac-table" id="vacTbl"></table></div>
-    </div>
-    <p style="font-size:12px;color:var(--muted);text-align:center;">הזן את מספר ימי החופש שנותרו לכל חייל. המערכת תוריד אוטומטית בסוף כל יום חופש.</p>
+    <p style="font-size:11px;color:var(--muted);text-align:center;">לחץ על שם החייל לצפייה ועריכת פרטים אישיים</p>
   </div>
   <div class="pane" id="pane-settings">
     <div class="card">
@@ -159,8 +166,33 @@ tr:hover td{background:#ffffff06;}
         <button class="btn-add" onclick="addEmp()">הוסף</button>
       </div>
     </div>
+    <div class="card">
+      <div class="card-head"><span>שדות מידע אישי</span></div>
+      <div style="padding:0 18px 14px;">
+        <div id="fieldList"></div>
+        <div class="fm-add">
+          <div class="fm-add-row">
+            <select id="newFieldType">
+              <option value="text">טקסט</option>
+              <option value="number">מספר</option>
+              <option value="date">תאריך</option>
+            </select>
+            <input type="text" id="newFieldLabel" placeholder="שם השדה (למשל: מספר טלפון)" />
+          </div>
+          <div class="fm-add-row">
+            <select id="newFieldCat" style="flex:1">
+              <option value="personal">אישי</option>
+              <option value="military">צבאי</option>
+            </select>
+            <button class="btn-add" onclick="addField()" style="flex:1">הוסף שדה</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Special event modal -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h3 id="modalTitle">פרטי אירוע מיוחד</h3>
@@ -172,18 +204,33 @@ tr:hover td{background:#ffffff06;}
     </div>
   </div>
 </div>
+
+<!-- Profile modal -->
+<div class="overlay" id="profileOverlay" onclick="if(event.target===this)closeProfile()">
+  <div class="modal profile-modal">
+    <h3 id="profileTitle" style="font-size:16px;color:var(--text);">שם החייל</h3>
+    <div id="profileBody"></div>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-c" onclick="closeProfile()" style="width:100%;">סגור</button>
+    </div>
+  </div>
+</div>
+
 <script>
 var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyTRXLKiKHnf2PuWTrNU-5aSE8WwVyXDLUyTRuLVgH_F1mMeFzpZ9ZYtCDCMLR15gtDvw/exec';
 var PROXY_URL = 'https://hr-proxy.shalevbuaron.workers.dev';
 var DEFAULT_EMP = ["איתן ליבשין", "איתן רוזנטל", "אורי דויטש", "בר ורוטנקר", "גיא אליאס", "מור ריבק", "רוני קוטליארנקו", "שחר שטייר", "אדר ביטון", "איתי בנס"];
+var DEFAULT_FIELDS = [{"key": "dapar", "label": "דפ\"ר", "type": "text", "cat": "military", "builtin": true}, {"key": "enlist", "label": "תאריך גיוס", "type": "date", "cat": "military", "builtin": true}, {"key": "hatash", "label": "הת\"ש", "type": "text", "cat": "military", "builtin": true}, {"key": "discharge", "label": "תאריך שחרור", "type": "date", "cat": "military", "builtin": true}, {"key": "cmd_days", "label": "ימי מפקד", "type": "number", "cat": "military", "builtin": true}, {"key": "vacation", "label": "ימי חופש שנותרו", "type": "number", "cat": "military", "builtin": true}, {"key": "birthday", "label": "יום הולדת", "type": "date", "cat": "personal", "builtin": true}, {"key": "allergies", "label": "אלרגיות", "type": "text", "cat": "personal", "builtin": true}];
 var DN = {0:'ראשון',1:'שני',2:'שלישי',3:'רביעי',4:'חמישי'};
 var WD = [];
 var tableData = {};
 var specialData = {};
-var vacData = {};
+var profileData = {};
+var fieldDefs = [];
 var EMP = [];
 var chatHistory = [];
 var modalEmp = null, modalDate = null;
+var profileEmp = null;
 
 function getWD() {
   var days = [], d = new Date();
@@ -215,7 +262,6 @@ function switchTab(t) {
   document.querySelectorAll('.pane').forEach(function(el){ el.classList.remove('active'); });
   document.getElementById('tab-'+t).classList.add('active');
   document.getElementById('pane-'+t).classList.add('active');
-  if (t === 'vac') renderVac();
   if (t === 'settings') renderSettings();
 }
 
@@ -228,20 +274,20 @@ function saveKey() {
   setSt('מפתח נשמר','ok');
 }
 
-// Check yesterday's vacation days and deduct from quota
 function processYesterdayVacation() {
   var yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   var yw = yesterday.getDay();
-  if (yw === 5 || yw === 6) return; // skip weekend
+  if (yw === 5 || yw === 6) return;
   var yKey = fmt(yesterday);
   var lastProcessed = localStorage.getItem('hr_last_processed') || '';
-  if (lastProcessed === yKey) return; // already processed today
+  if (lastProcessed === yKey) return;
   var changed = false;
   EMP.forEach(function(emp) {
     if (tableData[emp] && tableData[emp][yKey] === 'חופש') {
-      if (!vacData[emp]) vacData[emp] = {quota:0};
-      vacData[emp].quota = (vacData[emp].quota || 0) - 1;
+      if (!profileData[emp]) profileData[emp] = {};
+      var cur = parseInt(profileData[emp].vacation) || 0;
+      profileData[emp].vacation = String(cur - 1);
       changed = true;
     }
   });
@@ -249,31 +295,6 @@ function processYesterdayVacation() {
     localStorage.setItem('hr_last_processed', yKey);
     saveToSheets();
   }
-}
-
-function renderVac() {
-  var h = '<thead><tr><th>שם החייל</th><th style="text-align:center">ימי חופש שנותרו</th></tr></thead><tbody>';
-  var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
-  sorted.forEach(function(e) {
-    var quota = (vacData[e] && vacData[e].quota !== undefined) ? vacData[e].quota : '';
-    var empEnc = encodeURIComponent(e);
-    h += '<tr>';
-    h += '<td style="font-weight:500">' + e + '</td>';
-    h += '<td style="text-align:center">';
-    h += '<input class="vac-input" type="number" value="' + quota + '" onchange="setVacQuota(\'' + empEnc + '\',this.value)" />';
-    h += '</td>';
-    h += '</tr>';
-  });
-  h += '</tbody>';
-  document.getElementById('vacTbl').innerHTML = h;
-}
-
-function setVacQuota(empEnc, val) {
-  var emp = decodeURIComponent(empEnc);
-  if (!vacData[emp]) vacData[emp] = {};
-  vacData[emp].quota = parseInt(val) || 0;
-  try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
-  saveToSheets();
 }
 
 function renderSettings() {
@@ -287,6 +308,52 @@ function renderSettings() {
     h += '</div>';
   });
   document.getElementById('empList').innerHTML = h;
+  renderFieldManager();
+}
+
+function renderFieldManager() {
+  var h = '';
+  fieldDefs.forEach(function(f, i) {
+    var catLabel = f.cat === 'personal' ? 'אישי' : 'צבאי';
+    var typeLabel = f.type === 'number' ? 'מספר' : (f.type === 'date' ? 'תאריך' : 'טקסט');
+    h += '<div class="fm-row">';
+    h += '<span class="fm-label">' + f.label + '</span>';
+    h += '<span class="fm-meta">' + catLabel + ' · ' + typeLabel + '</span>';
+    if (!f.builtin) {
+      h += '<button class="btn-del" onclick="removeField(' + i + ')">הסר</button>';
+    }
+    h += '</div>';
+  });
+  document.getElementById('fieldList').innerHTML = h;
+}
+
+function addField() {
+  var label = document.getElementById('newFieldLabel').value.trim();
+  var type = document.getElementById('newFieldType').value;
+  var cat = document.getElementById('newFieldCat').value;
+  if (!label) { alert('אנא הכנס שם שדה'); return; }
+  var key = 'custom_' + Date.now();
+  fieldDefs.push({key:key, label:label, type:type, cat:cat, builtin:false});
+  saveFieldDefs();
+  document.getElementById('newFieldLabel').value = '';
+  renderFieldManager();
+}
+
+function removeField(idx) {
+  if (!confirm('להסיר את השדה "' + fieldDefs[idx].label + '" מכל העובדים?')) return;
+  var key = fieldDefs[idx].key;
+  fieldDefs.splice(idx, 1);
+  Object.keys(profileData).forEach(function(emp) {
+    if (profileData[emp] && profileData[emp][key] !== undefined) delete profileData[emp][key];
+  });
+  saveFieldDefs();
+  saveToSheets();
+  renderFieldManager();
+}
+
+function saveFieldDefs() {
+  try { localStorage.setItem('hr_fields', JSON.stringify(fieldDefs)); } catch(ex) {}
+  saveToSheets();
 }
 
 function addEmp() {
@@ -296,6 +363,7 @@ function addEmp() {
   EMP.push(name);
   sortEMP();
   if (!tableData[name]) tableData[name] = {};
+  if (!profileData[name]) profileData[name] = {};
   saveEmpList();
   saveToSheets();
   document.getElementById('newEmpInput').value = '';
@@ -310,6 +378,7 @@ function removeEmp(empEnc) {
   if (idx === -1) return;
   EMP.splice(idx, 1);
   delete tableData[name];
+  delete profileData[name];
   saveEmpList();
   saveToSheets();
   renderSettings();
@@ -349,7 +418,8 @@ function render() {
   h += '</tr></thead><tbody>';
   for (var ei = 0; ei < sorted.length; ei++) {
     var e = sorted[ei];
-    h += '<tr><td class="nm">' + e + '</td>';
+    var empEnc = encodeURIComponent(e);
+    h += '<tr><td class="nm" onclick="openProfile(\'' + empEnc + '\')">' + e + '</td>';
     for (var di = 0; di < WD.length; di++) {
       var dateKey = fmt(WD[di]);
       var v = (tableData[e] && tableData[e][dateKey]) || '';
@@ -361,6 +431,7 @@ function render() {
   document.getElementById('tbl').innerHTML = h;
 }
 
+// ===== Special event modal =====
 function openModal(emp, date) {
   modalEmp = emp; modalDate = date;
   document.getElementById('modalTitle').textContent = emp + ' \u2014 ' + date;
@@ -368,12 +439,10 @@ function openModal(emp, date) {
   document.getElementById('overlay').classList.add('open');
   setTimeout(function() { document.getElementById('modalText').focus(); }, 100);
 }
-
 function closeModal() {
   document.getElementById('overlay').classList.remove('open');
   modalEmp = null; modalDate = null;
 }
-
 function saveModal() {
   if (!modalEmp || !modalDate) return;
   var text = document.getElementById('modalText').value.trim();
@@ -381,44 +450,89 @@ function saveModal() {
   specialData[modalEmp][modalDate] = text;
   if (!tableData[modalEmp]) tableData[modalEmp] = {};
   tableData[modalEmp][modalDate] = 'מיוחד';
-  try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
   saveToSheets(); render(); closeModal();
 }
-
 function deleteSpecial() {
   if (!modalEmp || !modalDate) return;
   if (specialData[modalEmp]) delete specialData[modalEmp][modalDate];
   if (tableData[modalEmp]) tableData[modalEmp][modalDate] = '';
-  try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
   saveToSheets(); render(); closeModal();
 }
 
+// ===== Profile modal =====
+function openProfile(empEnc) {
+  profileEmp = decodeURIComponent(empEnc);
+  if (!profileData[profileEmp]) profileData[profileEmp] = {};
+  renderProfile();
+  document.getElementById('profileOverlay').classList.add('open');
+}
+
+function closeProfile() {
+  document.getElementById('profileOverlay').classList.remove('open');
+  profileEmp = null;
+}
+
+function renderProfile() {
+  document.getElementById('profileTitle').textContent = profileEmp;
+  var mil = fieldDefs.filter(function(f){ return f.cat === 'military'; });
+  var per = fieldDefs.filter(function(f){ return f.cat === 'personal'; });
+  var data = profileData[profileEmp] || {};
+
+  function renderSection(title, fields) {
+    var h = '<div class="profile-sec"><div class="profile-sec-title">' + title + '</div>';
+    fields.forEach(function(f) {
+      var val = data[f.key] || '';
+      var inputType = f.type === 'number' ? 'number' : (f.type === 'date' ? 'date' : 'text');
+      h += '<div class="profile-field">';
+      h += '<label>' + f.label + '</label>';
+      h += '<input type="' + inputType + '" value="' + val + '" onchange="setProfileField(\'' + f.key + '\',this.value)" />';
+      h += '</div>';
+    });
+    h += '</div>';
+    return h;
+  }
+
+  var html = renderSection('צבאי', mil) + renderSection('אישי', per);
+  document.getElementById('profileBody').innerHTML = html;
+}
+
+function setProfileField(key, val) {
+  if (!profileEmp) return;
+  if (!profileData[profileEmp]) profileData[profileEmp] = {};
+  profileData[profileEmp][key] = val;
+  saveToSheets();
+}
+
+// ===== Sheets sync =====
 function saveToSheets() {
   var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
-  var headers = ['\u05e9\u05dd'].concat(WD.map(function(d) { return fmt(d); }));
+  var headers = ['שם'].concat(WD.map(function(d) { return fmt(d); }));
   var rows = [headers];
   sorted.forEach(function(e) {
     var row = [e];
     WD.forEach(function(d) { row.push((tableData[e] && tableData[e][fmt(d)]) || ''); });
     rows.push(row);
   });
-  fetch(SHEETS_URL, { method: 'POST', body: JSON.stringify({data: rows, special: specialData, vac: vacData}) }).catch(function(){});
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    body: JSON.stringify({data: rows, special: specialData, profile: profileData, fields: fieldDefs})
+  }).catch(function(){});
   try { localStorage.setItem('hr_v6', JSON.stringify(tableData)); } catch(ex) {}
 }
 
 function load() {
   WD = getWD();
   EMP = DEFAULT_EMP.slice();
-  try { var v = localStorage.getItem('hr_vac'); if (v) vacData = JSON.parse(v); } catch(e) {}
+  fieldDefs = DEFAULT_FIELDS.slice();
   try {
     var k = localStorage.getItem('hr_apikey');
     if (k) {
       document.getElementById('apiKey').value = k;
-      document.getElementById('apiStatus').textContent = '\u05de\u05e4\u05ea\u05d7 \u05e9\u05de\u05d5\u05e8';
+      document.getElementById('apiStatus').textContent = 'מפתח שמור';
       document.getElementById('apiStatus').className = 'api-status ok';
     }
   } catch(e) {}
-  setSt('\u05d8\u05d5\u05e2\u05df \u05e0\u05ea\u05d5\u05e0\u05d9\u05dd...', 'loading');
+  setSt('טוען נתונים...', 'loading');
   fetch(SHEETS_URL)
     .then(function(r) { return r.json(); })
     .then(function(result) {
@@ -430,7 +544,7 @@ function load() {
         var headers = rows[0];
         for (var i = 1; i < rows.length; i++) {
           var empName = rows[i][0];
-          if (!empName || empName === '__special__' || empName === '__vac__') continue;
+          if (!empName || empName.indexOf('__') === 0) continue;
           if (empSeen[empName]) continue;
           empSeen[empName] = true;
           empFromSheet.push(empName);
@@ -446,23 +560,15 @@ function load() {
           }
         }
       }
-      if (empFromSheet.length > 0) {
-        EMP = empFromSheet;
-        saveEmpList();
-      }
-      if (result.special && Object.keys(result.special).length > 0) {
-        specialData = result.special;
-        try { localStorage.setItem('hr_special', JSON.stringify(specialData)); } catch(ex) {}
-      }
-      if (result.vac) {
-        vacData = result.vac;
-        try { localStorage.setItem('hr_vac', JSON.stringify(vacData)); } catch(ex) {}
-      }
+      if (empFromSheet.length > 0) { EMP = empFromSheet; saveEmpList(); }
+      if (result.special) specialData = result.special;
+      if (result.profile) profileData = result.profile;
+      if (result.fields && result.fields.length) fieldDefs = result.fields;
       processYesterdayVacation();
       render();
-      setSt('\u05de\u05d5\u05db\u05df', '');
+      setSt('מוכן', '');
     })
-    .catch(function() { render(); setSt('\u05de\u05d5\u05db\u05df', ''); });
+    .catch(function() { render(); setSt('מוכן', ''); });
 }
 
 function buildSystemPrompt() {
@@ -477,38 +583,38 @@ function buildSystemPrompt() {
     });
     if (entries.length) stateLines.push(e + ': ' + entries.join(', '));
   });
-  var state = stateLines.length ? stateLines.join(' | ') : '\u05d0\u05d9\u05df \u05d4\u05d9\u05e2\u05d3\u05e8\u05d5\u05d9\u05d5\u05ea';
+  var state = stateLines.length ? stateLines.join(' | ') : 'אין היעדרויות';
   return [
-    '\u05d0\u05ea\u05d4 \u05e2\u05d5\u05d6\u05e8 HR \u05dc\u05e0\u05d9\u05d4\u05d5\u05dc \u05e0\u05d5\u05db\u05d7\u05d5\u05ea \u05d7\u05d9\u05d9\u05dc\u05d9\u05dd. \u05e2\u05e0\u05d4 \u05ea\u05de\u05d9\u05d3 \u05d1\u05e2\u05d1\u05e8\u05d9\u05ea.',
-    '\u05e2\u05d5\u05d1\u05d3\u05d9\u05dd: ' + EMP.join(', '),
-    '\u05d9\u05de\u05d9 \u05e2\u05d1\u05d5\u05d3\u05d4 (\u05e8\u05d0\u05e9\u05d5\u05df-\u05d7\u05de\u05d9\u05e9\u05d9): ' + dates,
-    '\u05d4\u05d9\u05d5\u05dd: ' + today,
-    '\u05de\u05e6\u05d1 \u05e0\u05d5\u05db\u05d7\u05d9: ' + state,
+    'אתה עוזר HR לניהול נוכחות חיילים. ענה תמיד בעברית.',
+    'עובדים: ' + EMP.join(', '),
+    'ימי עבודה (ראשון-חמישי): ' + dates,
+    'היום: ' + today,
+    'מצב נוכחי: ' + state,
     '',
-    '\u05d7\u05d5\u05e7\u05d9\u05dd:',
-    '1. \u05d9\u05de\u05d9 \u05de\u05d7\u05dc\u05d4 \u05e0\u05e1\u05e4\u05e8\u05d9\u05dd \u05db\u05d9\u05de\u05d9\u05dd \u05e7\u05dc\u05e0\u05d3\u05e8\u05d9\u05d9\u05dd \u05e8\u05e6\u05d5\u05e4\u05d9\u05dd \u05db\u05d5\u05dc\u05dc \u05e9\u05d9\u05e9\u05d9 \u05d5\u05e9\u05d1\u05ea. \u05e9\u05d9\u05e9\u05d9/\u05e9\u05d1\u05ea \u05dc\u05d0 \u05de\u05d5\u05e4\u05d9\u05e2\u05d9\u05dd \u05d1\u05d8\u05d1\u05dc\u05d4.',
-    '   \u05d3\u05d5\u05d2\u05de\u05d4: \u05e9\u05d1\u05d5\u05e2 \u05de\u05e8\u05d0\u05e9\u05d5\u05df 07/06 = 07-13/06, \u05d1\u05d8\u05d1\u05dc\u05d4: 07,08,09,10,11/06.',
-    '2. \u05d0\u05dd \u05dc\u05d0 \u05e6\u05d5\u05d9\u05df \u05d9\u05d5\u05dd \u05d4\u05ea\u05d7\u05dc\u05d4, \u05d4\u05ea\u05d7\u05dc \u05de\u05d4\u05d9\u05d5\u05dd \u05d4\u05d1\u05d0.',
-    '3. \u05e1\u05d5\u05d2\u05d9 \u05d4\u05d9\u05e2\u05d3\u05e8\u05d5\u05ea: \u05d4\u05e4\u05e0\u05d9\u05d9\u05d4, \u05d7\u05d5\u05e4\u05e9, \u05d2\u05d9\u05de\u05dc, \u05dc\u05d0 \u05de\u05d2\u05d9\u05e2, \u05d0\u05e4\u05d8\u05e8, \u05de\u05d9\u05d5\u05d7\u05d3',
-    '4. \u05d0\u05e4\u05d8\u05e8 = \u05d9\u05d5\u05e6\u05d0 \u05d1\u05d0\u05d5\u05ea\u05d5 \u05d9\u05d5\u05dd \u05d5\u05d7\u05d5\u05d6\u05e8 \u05dc\u05de\u05d7\u05e8\u05ea.',
-    '5. \u05de\u05d9\u05d5\u05d7\u05d3 = \u05d0\u05d9\u05e8\u05d5\u05e2 \u05de\u05d9\u05d5\u05d7\u05d3, \u05e4\u05e8\u05d8\u05d9\u05dd \u05d9\u05d5\u05d6\u05e0\u05d5 \u05d9\u05d3\u05e0\u05d9\u05ea.',
-    '6. \u05d1\u05d9\u05d8\u05d5\u05dc \u05db\u05dc\u05dc\u05d9 = action:remove_all',
-    '7. \u05d1\u05d9\u05d8\u05d5\u05dc \u05e1\u05e4\u05e6\u05d9\u05e4\u05d9 = action:remove \u05e2\u05dd \u05ea\u05d0\u05e8\u05d9\u05da',
-    '8. \u05d4\u05d5\u05e1\u05e4\u05d4 = action:add',
+    'חוקים:',
+    '1. ימי מחלה נספרים כימים קלנדריים רצופים כולל שישי ושבת. שישי/שבת לא מופיעים בטבלה.',
+    '   דוגמה: שבוע מראשון 07/06 = 07-13/06, בטבלה: 07,08,09,10,11/06.',
+    '2. אם לא צוין יום התחלה, התחל מהיום הבא.',
+    '3. סוגי היעדרות: הפנייה, חופש, גימל, לא מגיע, אפטר, מיוחד',
+    '4. אפטר = יוצא באותו יום וחוזר למחרת.',
+    '5. מיוחד = אירוע מיוחד, פרטים יוזנו ידנית.',
+    '6. ביטול כללי = action:remove_all',
+    '7. ביטול ספציפי = action:remove עם תאריך',
+    '8. הוספה = action:add',
     '',
-    '\u05d7\u05e9\u05d5\u05d1: \u05e2\u05e0\u05d4 \u05d0\u05da \u05d5\u05e8\u05e7 \u05d1-JSON \u05ea\u05e7\u05e0\u05d9 \u05dc\u05dc\u05d0 \u05d8\u05e7\u05e1\u05d8 \u05e0\u05d5\u05e1\u05e3.',
-    '\u05db\u05e9\u05de\u05d1\u05d9\u05df: {"changes":[{"employee":"\u05e9\u05dd","date":"DD/MM","reason":"\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4|\u05d7\u05d5\u05e4\u05e9|\u05d2\u05d9\u05de\u05dc|\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2|\u05d0\u05e4\u05d8\u05e8|\u05de\u05d9\u05d5\u05d7\u05d3","action":"add|remove|remove_all"}],"summary":"\u05ea\u05d9\u05d0\u05d5\u05e8","needs_clarification":false}',
-    '\u05db\u05e9\u05e6\u05e8\u05d9\u05da \u05d4\u05d1\u05d4\u05e8\u05d4: {"changes":[],"summary":"","needs_clarification":true,"question":"\u05e9\u05d0\u05dc\u05d4"}'
+    'חשוב: ענה אך ורק ב-JSON תקני ללא טקסט נוסף.',
+    'כשמבין: {"changes":[{"employee":"שם","date":"DD/MM","reason":"הפנייה|חופש|גימל|לא מגיע|אפטר|מיוחד","action":"add|remove|remove_all"}],"summary":"תיאור","needs_clarification":false}',
+    'כשצריך הבהרה: {"changes":[],"summary":"","needs_clarification":true,"question":"שאלה"}'
   ].join('\n');
 }
 
 function sendMsg() {
   var msg = document.getElementById('msg').value.trim();
-  if (!msg) { setSt('\u05d0\u05e0\u05d0 \u05db\u05ea\u05d5\u05d1 \u05d4\u05d5\u05d3\u05e2\u05d4','err'); return; }
+  if (!msg) { setSt('אנא כתוב הודעה','err'); return; }
   var key = localStorage.getItem('hr_apikey') || '';
-  if (!key) { setSt('\u05d0\u05e0\u05d0 \u05d4\u05db\u05e0\u05e1 \u05de\u05e4\u05ea\u05d7 API','err'); return; }
+  if (!key) { setSt('אנא הכנס מפתח API','err'); return; }
   document.getElementById('sendBtn').disabled = true;
-  setSt('\u05de\u05e0\u05ea\u05d7 \u05d4\u05d5\u05d3\u05e2\u05d4...','loading');
+  setSt('מנתח הודעה...','loading');
   chatHistory.push({role:'user', content: msg});
   fetch(PROXY_URL, {
     method: 'POST',
@@ -516,11 +622,11 @@ function sendMsg() {
     body: JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:buildSystemPrompt(),messages:chatHistory})
   })
   .then(function(r) {
-    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||'\u05e9\u05d2\u05d9\u05d0\u05ea \u05e9\u05e8\u05ea '+r.status); });
+    if (!r.ok) return r.json().then(function(e){ throw new Error((e&&e.error&&e.error.message)||'שגיאת שרת '+r.status); });
     return r.json();
   })
   .then(function(result) {
-    if (!result || !result.content) throw new Error('\u05ea\u05e9\u05d5\u05d1\u05d4 \u05e8\u05d9\u05e7\u05d4');
+    if (!result || !result.content) throw new Error('תשובה ריקה');
     var text = result.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
     chatHistory.push({role:'assistant', content: text});
     var parsed;
@@ -529,7 +635,7 @@ function sendMsg() {
       parsed = JSON.parse(clean);
     } catch(e1) {
       try { parsed = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}')+1)); }
-      catch(e2) { throw new Error('\u05ea\u05e9\u05d5\u05d1\u05d4 \u05dc\u05d0 \u05ea\u05e7\u05d9\u05e0\u05d4'); }
+      catch(e2) { throw new Error('תשובה לא תקינה'); }
     }
     if (parsed.needs_clarification) {
       setSt('? ' + parsed.question, '');
@@ -539,41 +645,31 @@ function sendMsg() {
       if (changes.length > 0) {
         changes.forEach(function(a) {
           var emp = null;
-          for (var i = 0; i < EMP.length; i++) {
-            if (EMP[i] === a.employee) { emp = EMP[i]; break; }
-          }
-          if (!emp) {
-            for (var i = 0; i < EMP.length; i++) {
-              if (EMP[i].indexOf(a.employee) !== -1) { emp = EMP[i]; break; }
-            }
-          }
+          for (var i = 0; i < EMP.length; i++) { if (EMP[i] === a.employee) { emp = EMP[i]; break; } }
+          if (!emp) { for (var i = 0; i < EMP.length; i++) { if (EMP[i].indexOf(a.employee) !== -1) { emp = EMP[i]; break; } } }
           if (!emp) {
             var parts = a.employee.split(' ');
             var lastName = parts.length > 1 ? parts[parts.length-1] : null;
-            if (lastName) {
-              for (var i = 0; i < EMP.length; i++) {
-                if (EMP[i].indexOf(lastName) !== -1) { emp = EMP[i]; break; }
-              }
-            }
+            if (lastName) { for (var i = 0; i < EMP.length; i++) { if (EMP[i].indexOf(lastName) !== -1) { emp = EMP[i]; break; } } }
           }
           if (emp) {
             if (!tableData[emp]) tableData[emp] = {};
             if (a.action === 'remove_all') { WD.forEach(function(d){ tableData[emp][fmt(d)] = ''; }); }
             else if (a.action === 'remove' && a.date) { tableData[emp][a.date] = ''; }
-            else if (a.action === 'add' && a.date) { tableData[emp][a.date] = a.reason || '\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2'; }
+            else if (a.action === 'add' && a.date) { tableData[emp][a.date] = a.reason || 'לא מגיע'; }
           }
         });
         saveToSheets(); render();
         setSt('\u2713 ' + parsed.summary, 'ok');
         chatHistory = [];
       } else {
-        setSt('\u26a0 ' + (parsed.summary || '\u05dc\u05d0 \u05d4\u05d1\u05e0\u05ea\u05d9'), 'err');
+        setSt('\u26a0 ' + (parsed.summary || 'לא הבנתי'), 'err');
         chatHistory = [];
       }
       document.getElementById('msg').value = '';
     }
   })
-  .catch(function(e) { setSt('\u05e9\u05d2\u05d9\u05d0\u05d4: ' + e.message, 'err'); chatHistory = []; })
+  .catch(function(e) { setSt('שגיאה: ' + e.message, 'err'); chatHistory = []; })
   .finally(function() { document.getElementById('sendBtn').disabled = false; });
 }
 
@@ -583,34 +679,34 @@ function copyReport() {
   while (tomorrow.getDay() === 5 || tomorrow.getDay() === 6) tomorrow.setDate(tomorrow.getDate() + 1);
   var dateKey = fmt(tomorrow);
   var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
-  var lines = '*\u05d3\u05d5\u05d7 1 \u05de\u05d7\u05dc\u05e7\u05ea \u05d0\u05d3\u05d5\u05dd \u05d9\u05d5\u05dd ' + DN[tomorrow.getDay()] + ' ' + dateKey + '*\n';
+  var lines = '*דוח 1 מחלקת אדום יום ' + DN[tomorrow.getDay()] + ' ' + dateKey + '*\n';
   sorted.forEach(function(e) {
     var v = (tableData[e] && tableData[e][dateKey]) || '';
-    var loc = '\u05d1\u05e1\u05d9\u05e1';
-    if (v==='\u05d2\u05d9\u05de\u05dc') loc='\u05d2\u05d9\u05de\u05dc\u05d9\u05dd';
-    else if (v==='\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4') loc='\u05d4\u05e4\u05e0\u05d9\u05d9\u05d4';
-    else if (v==='\u05d7\u05d5\u05e4\u05e9') loc='\u05d7\u05d5\u05e4\u05e9\u05d4 \u05e9\u05e0\u05ea\u05d9\u05ea';
-    else if (v==='\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2') loc='\u05dc\u05d0 \u05de\u05d2\u05d9\u05e2';
-    else if (v==='\u05d0\u05e4\u05d8\u05e8') loc='\u05d0\u05e4\u05d8\u05e8';
-    else if (v==='\u05de\u05d9\u05d5\u05d7\u05d3') loc=(specialData[e]&&specialData[e][dateKey])||'\u05d0\u05d9\u05e8\u05d5\u05e2 \u05de\u05d9\u05d5\u05d7\u05d3';
+    var loc = 'בסיס';
+    if (v==='גימל') loc='גימלים';
+    else if (v==='הפנייה') loc='הפנייה';
+    else if (v==='חופש') loc='חופשה שנתית';
+    else if (v==='לא מגיע') loc='לא מגיע';
+    else if (v==='אפטר') loc='אפטר';
+    else if (v==='מיוחד') loc=(specialData[e]&&specialData[e][dateKey])||'אירוע מיוחד';
     lines += e + ' - ' + loc + '\n';
   });
   navigator.clipboard.writeText(lines).then(function() {
     var b = document.querySelectorAll('.btn-sm')[0];
-    var o = b.textContent; b.textContent = '\u05d4\u05d5\u05e2\u05ea\u05e7!';
+    var o = b.textContent; b.textContent = 'הועתק!';
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
 
 function copyExcel() {
   var sorted = EMP.slice().sort(function(a,b){ return a.localeCompare(b,'he'); });
-  var t = '\u05e9\u05dd \u05d4\u05d7\u05d9\u05d9\u05dc\t' + WD.map(function(d){ return DN[d.getDay()]+' '+fmt(d); }).join('\t') + '\n';
+  var t = 'שם החייל\t' + WD.map(function(d){ return DN[d.getDay()]+' '+fmt(d); }).join('\t') + '\n';
   sorted.forEach(function(e) {
     t += e + '\t' + WD.map(function(d){ return (tableData[e]&&tableData[e][fmt(d)])||''; }).join('\t') + '\n';
   });
   navigator.clipboard.writeText(t).then(function() {
     var b = document.querySelectorAll('.btn-sm')[1];
-    var o = b.textContent; b.textContent = '\u05d4\u05d5\u05e2\u05ea\u05e7!';
+    var o = b.textContent; b.textContent = 'הועתק!';
     setTimeout(function(){ b.textContent = o; }, 2000);
   });
 }
